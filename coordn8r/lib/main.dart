@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:coordn8r/pages/teams_page.dart';
+import 'package:coordn8r/pages/home_page.dart';
 
 void main() => runApp(new Coordn8rApp());
 
@@ -21,7 +22,7 @@ class Coordn8rApp extends StatelessWidget {
         // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.green,
       ),
-      home: new TeamsPage(),
+      home: new HomePage(),
     );
   }
 }
