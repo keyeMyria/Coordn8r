@@ -2,6 +2,8 @@ name: coordn8r
 description: Application to facilitate all aspects of teamwork, collaboration, and coordination.
 
 dependencies:
+  community_material_icon: "^0.1.2"
+
   flutter:
     sdk: flutter
 

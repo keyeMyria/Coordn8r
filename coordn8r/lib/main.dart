@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(new MyApp());
+import 'package:coordn8r/pages/teams_page.dart';
 
-class MyApp extends StatelessWidget {
+void main() => runApp(new Coordn8rApp());
+
+class Coordn8rApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Coordn8r',
       theme: new ThemeData(
         // This is the theme of your application.
         //
@@ -17,9 +19,9 @@ class MyApp extends StatelessWidget {
         // "hot reload" (press "r" in the console where you ran "flutter run",
         // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
         // counter didn't reset back to zero; the application is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
-      home: new MyHomePage(title: 'Flutter Demo Home Page'),
+      home: new TeamsPage(),
     );
   }
 }
