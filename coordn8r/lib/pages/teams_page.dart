@@ -34,10 +34,11 @@ class TeamsPage extends StatelessWidget {
           border: Border.all(color: Colors.orange),
           borderRadius: BorderRadius.circular(5.0),
         ),
-        padding: const EdgeInsets.all(10.0),
-        child: Row(
+        padding: const EdgeInsets.all(5.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Expanded(
+            Flexible(
               child: new Text(document['Teams'].toString()),
             ),
             Text("Filler"),
