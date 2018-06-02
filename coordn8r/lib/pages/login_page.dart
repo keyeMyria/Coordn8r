@@ -6,7 +6,7 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'dart:async';
+import 'dart:io';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = new GoogleSignIn();
@@ -56,7 +56,7 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     }
   }
 
-  Future<FirebaseUser> _login() async {
+  void _login() async {
     setState(() {
       _loginInProgress = true;
     });
@@ -89,90 +89,94 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          FlutterLogo(
-            size: _iconAnimation.value * 100,
-          ),
-          Form(
-            key: _loginFormKey,
-            child: Container(
-              padding: EdgeInsets.all(40.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  TextFormField(
-                    decoration: InputDecoration(
-                        labelText: "Email", hintText: "jane.doe@example.com"),
-                    keyboardType: TextInputType.emailAddress,
-                    autofocus: false,
-                    validator: (value) => value.isEmpty || !value.contains('@')
-                        ? 'Please enter valid email'
-                        : null,
-                    onSaved: (val) => _email = val,
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      errorText: _errorText,
+    return WillPopScope(
+      onWillPop: () => exit(0),
+      child: Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            FlutterLogo(
+              size: _iconAnimation.value * 100,
+            ),
+            Form(
+              key: _loginFormKey,
+              child: Container(
+                padding: EdgeInsets.all(40.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    TextFormField(
+                      decoration: InputDecoration(
+                          labelText: "Email", hintText: "jane.doe@example.com"),
+                      keyboardType: TextInputType.emailAddress,
+                      autofocus: false,
+                      validator: (value) =>
+                          value.isEmpty || !value.contains('@')
+                              ? 'Please enter valid email'
+                              : null,
+                      onSaved: (val) => _email = val,
                     ),
-                    keyboardType: TextInputType.text,
-                    obscureText: true,
-                    autofocus: false,
-                    validator: (value) =>
-                        value.isEmpty ? 'Please enter valid password' : null,
-                    onSaved: (val) => _password = val,
-                  ),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                  Material(
-                    borderRadius: BorderRadius.circular(30.0),
-                    child: MaterialButton(
-                      minWidth: 200.0,
-                      height: 50.0,
-                      onPressed: _loginInProgress ? null : _testSignIn,
-                      color: Colors.orange,
-                      child: _loginInProgress
-                          ? CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  Theme.of(context).textTheme.display1.color),
-                            )
-                          : Text("Log In"),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        errorText: _errorText,
+                      ),
+                      keyboardType: TextInputType.text,
+                      obscureText: true,
+                      autofocus: false,
+                      validator: (value) =>
+                          value.isEmpty ? 'Please enter valid password' : null,
+                      onSaved: (val) => _password = val,
                     ),
-                  ),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      FlatButton(
-                        splashColor: Colors.grey,
-                        child: Text("Sign up"),
-                        onPressed: () {
-                          // TODO: implement sign up
-                        },
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    Material(
+                      borderRadius: BorderRadius.circular(30.0),
+                      child: MaterialButton(
+                        minWidth: 200.0,
+                        height: 50.0,
+                        onPressed: _loginInProgress ? null : _testSignIn,
+                        color: Colors.orange,
+                        child: _loginInProgress
+                            ? CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context).textTheme.display1.color),
+                              )
+                            : Text("Log In"),
                       ),
-                      SizedBox(
-                        width: 20.0,
-                      ),
-                      FlatButton(
-                        splashColor: Colors.grey,
-                        onPressed: () {
-                          // TODO: implement forgot password
-                        },
-                        child: Text("Forgot Password"),
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        FlatButton(
+                          splashColor: Colors.grey,
+                          child: Text("Sign up"),
+                          onPressed: () {
+                            // TODO: implement sign up
+                          },
+                        ),
+                        SizedBox(
+                          width: 20.0,
+                        ),
+                        FlatButton(
+                          splashColor: Colors.grey,
+                          onPressed: () {
+                            // TODO: implement forgot password
+                          },
+                          child: Text("Forgot Password"),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

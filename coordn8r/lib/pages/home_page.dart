@@ -63,7 +63,7 @@ class HomePage extends StatelessWidget {
               new Tab(
                   icon: new Icon(
                 CommunityMaterialIcons.group,
-                color: Colors.orange,
+                color: Theme.of(context).primaryColor,
               )),
               new Tab(
                   icon: new Icon(
