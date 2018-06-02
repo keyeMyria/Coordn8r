@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:coordn8r/pages/home_page.dart';
 import 'package:coordn8r/pages/teams_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -32,6 +34,7 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    _logout();
     _iconAnimationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500),
@@ -81,10 +84,9 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 //    assert(user.isEmailVerified); TODO: implement this when signup is implemented
   }
 
-  bool _logout() {
-    bool _success = false;
-
-    return _success;
+  void _logout() async {
+    await _auth.signOut().catchError((e) => print(e
+        .message)); // TODO: define what happens when the logout is unsuccessful
   }
 
   @override
