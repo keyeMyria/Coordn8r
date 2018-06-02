@@ -6,6 +6,7 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:async';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = new GoogleSignIn();
@@ -55,19 +56,29 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     }
   }
 
-  void _login() async {
+  Future<FirebaseUser> _login() async {
     setState(() {
       _loginInProgress = true;
     });
-    final FirebaseUser user = await _auth.signInWithEmailAndPassword(
-        email: _email, password: _password);
-    assert(user != null);
-    assert(!user.isAnonymous);
-//    assert(user.isEmailVerified);
-    assert(await user.getIdToken() != null);
-    //if (!_success) _loginInProgress = false;
+    await _auth
+        .signInWithEmailAndPassword(email: _email, password: _password)
+        .then((FirebaseUser user) async => (user != null &&
+                !user.isAnonymous &&
+                await user.getIdToken() != null)
+            ? Navigator.of(context).pushNamed(HomePage.tag)
+            : setState(() {
+                _loginInProgress = false;
+                _errorText = 'Invalid email and password combination';
+              }))
+        .catchError((e) => setState(() {
+              _loginInProgress = false;
+              _errorText = 'Invalid email and password combination';
+            }));
 
-    Navigator.of(context).pushNamed(HomePage.tag);
+//    assert(user != null);
+//    assert(!user.isAnonymous);
+//    assert(await user.getIdToken() != null);
+//    assert(user.isEmailVerified); TODO: implement this when signup is implemented
   }
 
   bool _logout() {
@@ -122,7 +133,7 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     child: MaterialButton(
                       minWidth: 200.0,
                       height: 50.0,
-                      onPressed: _testSignIn,
+                      onPressed: _loginInProgress ? null : _testSignIn,
                       color: Colors.orange,
                       child: _loginInProgress
                           ? CircularProgressIndicator(
