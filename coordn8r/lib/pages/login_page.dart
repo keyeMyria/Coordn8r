@@ -90,7 +90,10 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => exit(0),
+      onWillPop: () {
+        exit(0);
+        return;
+      },
       child: Scaffold(
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
