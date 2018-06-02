@@ -14,6 +14,12 @@ dependencies:
   # Allows access to the firestore storage in firebase for backend
   cloud_firestore: ^0.7.2
 
+  # Firebase authentication
+  firebase_auth: "^0.5.11"
+
+  # Google sign in capabilities
+  google_sign_in: "^3.0.4"
+
 
 dev_dependencies:
   flutter_test:

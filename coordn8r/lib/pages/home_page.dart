@@ -1,4 +1,4 @@
-import 'package:coordn8r/login_page.dart';
+import 'package:coordn8r/pages/login_page.dart';
 import 'package:coordn8r/pages/teams_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +13,7 @@ class HomePage extends StatelessWidget {
       onWillPop: () {
         return showDialog(
           context: context,
+//          barrierDismissible: false, // must press button
           builder: (context) {
             return AlertDialog(
               title: Text('Are you sure?'),
@@ -35,9 +36,9 @@ class HomePage extends StatelessWidget {
       child: new DefaultTabController(
         length: 4,
         child: new Scaffold(
-//          appBar: new AppBar(
-//            title: new Text('Coordn8r'),
-//          ),
+          appBar: new AppBar(
+            title: new Text('Coordn8r'),
+          ),
           body: new SafeArea(
             child: new TabBarView(
               children: [

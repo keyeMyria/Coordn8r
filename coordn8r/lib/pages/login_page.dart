@@ -3,23 +3,33 @@ import 'package:coordn8r/pages/teams_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final GoogleSignIn _googleSignIn = new GoogleSignIn();
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login_page';
+
+  //final firebaseUser = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
 
   @override
   State<LoginPage> createState() => LoginPageState();
 }
 
-class LoginPageState extends State<LoginPage>
-    with SingleTickerProviderStateMixin {
+class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   AnimationController _iconAnimationController;
   Animation<double> _iconAnimation;
   final GlobalKey<FormState> _loginFormKey = new GlobalKey<FormState>();
+  String _email;
+  String _password;
+  String _errorText;
+  bool _loginInProgress = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _iconAnimationController = AnimationController(
       vsync: this,
@@ -28,9 +38,42 @@ class LoginPageState extends State<LoginPage>
     _iconAnimation = CurvedAnimation(
       parent: _iconAnimationController,
       curve: Curves.easeIn,
-    );
-    _iconAnimation.addListener(() => this.setState(() => {}));
+    )..addListener(() => this.setState(() => {}));
     _iconAnimationController.forward();
+  }
+
+  dispose() {
+    _iconAnimationController.dispose();
+    super.dispose();
+  }
+
+  void _testSignIn() {
+    final form = _loginFormKey.currentState;
+    if (form.validate()) {
+      form.save();
+      _login();
+    }
+  }
+
+  void _login() async {
+    setState(() {
+      _loginInProgress = true;
+    });
+    final FirebaseUser user = await _auth.signInWithEmailAndPassword(
+        email: _email, password: _password);
+    assert(user != null);
+    assert(!user.isAnonymous);
+//    assert(user.isEmailVerified);
+    assert(await user.getIdToken() != null);
+    //if (!_success) _loginInProgress = false;
+
+    Navigator.of(context).pushNamed(HomePage.tag);
+  }
+
+  bool _logout() {
+    bool _success = false;
+
+    return _success;
   }
 
   @override
@@ -51,26 +94,25 @@ class LoginPageState extends State<LoginPage>
                 children: <Widget>[
                   TextFormField(
                     decoration: InputDecoration(
-                        labelText: "Email", hintText: "john.doe@example.com"),
+                        labelText: "Email", hintText: "jane.doe@example.com"),
                     keyboardType: TextInputType.emailAddress,
                     autofocus: false,
-                    validator: (value) {
-                      // could possibly do some frontend verification to make sure email is valid
-                      // but will leave the validation to the backend
-                      if (value.isEmpty) return 'Please enter valid email';
-                    },
+                    validator: (value) => value.isEmpty || !value.contains('@')
+                        ? 'Please enter valid email'
+                        : null,
+                    onSaved: (val) => _email = val,
                   ),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: "Password",
-                      //errorText: "I am error text",
+                      errorText: _errorText,
                     ),
                     keyboardType: TextInputType.text,
                     obscureText: true,
                     autofocus: false,
-                    validator: (value) {
-                      if (value.isEmpty) return 'Please enter valid password';
-                    },
+                    validator: (value) =>
+                        value.isEmpty ? 'Please enter valid password' : null,
+                    onSaved: (val) => _password = val,
                   ),
                   SizedBox(
                     height: 30.0,
@@ -80,14 +122,14 @@ class LoginPageState extends State<LoginPage>
                     child: MaterialButton(
                       minWidth: 200.0,
                       height: 50.0,
-                      onPressed: () {
-                        if (_loginFormKey.currentState.validate()) {
-                          // TODO: implement animation
-                          Navigator.of(context).pushNamed(HomePage.tag);
-                        }
-                      },
+                      onPressed: _testSignIn,
                       color: Colors.orange,
-                      child: Text("Log In"),
+                      child: _loginInProgress
+                          ? CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Theme.of(context).textTheme.display1.color),
+                            )
+                          : Text("Log In"),
                     ),
                   ),
                   SizedBox(
