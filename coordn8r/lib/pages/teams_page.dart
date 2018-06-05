@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coordn8r/pages/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
 
 class TeamsPage extends StatelessWidget {
+  final String _obj = 'Objectives';
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -13,36 +18,40 @@ class TeamsPage extends StatelessWidget {
     return StreamBuilder(
         stream: Firestore.instance
             .collection('users')
-            .where("ID", isEqualTo: 'quintonhoffman')
+            .document(user.uid)
             .snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return const Text('Loading...');
-          return new ListView.builder(
-            itemCount: snapshot.data.documents.length,
+          if (!snapshot.hasData) const Text('Loading...');
+          return ListView.builder(
+            itemCount: snapshot.data[_obj].length,
             padding: const EdgeInsets.only(top: 10.0),
             itemBuilder: (context, index) =>
-                _buildListItem(context, snapshot.data.documents[index]),
+                _buildListItem(context, snapshot.data[_obj][index]),
           );
         });
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot document) {
-    return ListTile(
-      key: ValueKey(document.documentID),
-      title: Container(
+  Widget _buildListItem(BuildContext context, objective) {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.orange),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
-        padding: const EdgeInsets.all(5.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Flexible(
-              child: new Text(document['Teams'].toString()),
+            border: Border.all(
+              color: Colors.black12,
+              width: 2.0,
             ),
-            Text("Filler"),
-          ],
+            borderRadius: BorderRadius.circular(5.0)),
+        child: ListTile(
+          leading: Icon(
+            Icons.check,
+            color: Colors.orange,
+          ),
+          title: Text(
+            objective['Title'].toString(),
+          ),
+          subtitle: Text(
+            objective['Description'].toString(),
+          ),
         ),
       ),
     );

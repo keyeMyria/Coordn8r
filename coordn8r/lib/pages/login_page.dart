@@ -10,13 +10,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-final GoogleSignIn _googleSignIn = new GoogleSignIn();
+final FirebaseAuth auth = FirebaseAuth.instance;
+FirebaseUser user;
+// final GoogleSignIn _googleSignIn = new GoogleSignIn();
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login_page';
-
-  //final firebaseUser = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
 
   @override
   State<LoginPage> createState() => LoginPageState();
@@ -39,10 +38,9 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: 500),
     );
-    _iconAnimation = CurvedAnimation(
-      parent: _iconAnimationController,
-      curve: Curves.easeIn,
-    )..addListener(() => this.setState(() => {}));
+    _iconAnimation = Tween(begin: 0.0, end: 100.0)
+        .animate(_iconAnimationController)
+          ..addListener(() => this.setState(() {}));
     _iconAnimationController.forward();
   }
 
@@ -63,17 +61,21 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     setState(() {
       _loginInProgress = true;
     });
-    await _auth
+    await auth
         .signInWithEmailAndPassword(email: _email, password: _password)
-        .then((FirebaseUser user) async => (user != null &&
-                !user.isAnonymous &&
-                await user.getIdToken() != null)
-            ? Navigator.of(context).pushNamed(HomePage.tag)
-            : setState(() {
-                _loginInProgress = false;
-                _errorText = 'Invalid email and password combination';
-              }))
-        .catchError((e) => setState(() {
+        .then((FirebaseUser u) async {
+      if (u != null && !u.isAnonymous && await u.getIdToken() != null) {
+        // TODO: implement page transition
+
+        user = u;
+        Navigator.of(context).pushNamed(HomePage.tag);
+      } else {
+        setState(() {
+          _loginInProgress = false;
+          _errorText = 'Invalid email and password combination';
+        });
+      }
+    }).catchError((e) => setState(() {
               _loginInProgress = false;
               _errorText = 'Invalid email and password combination';
             }));
@@ -85,7 +87,8 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   }
 
   void _logout() async {
-    await _auth.signOut().catchError((e) => print(e
+    // TODO: delete underscore to make public method
+    await auth.signOut().catchError((e) => print(e
         .message)); // TODO: define what happens when the logout is unsuccessful
   }
 
@@ -100,9 +103,16 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            FlutterLogo(
-              size: _iconAnimation.value * 100,
-            ),
+            InkWell(
+                child: FlutterLogo(
+                  colors: Theme.of(context).primaryColor,
+                  size: _iconAnimation.value,
+                ),
+                onTap: () {
+                  _email = "quintonhoffman22@gmail.com";
+                  _password = "TestPassword";
+                  _login();
+                }),
             Form(
               key: _loginFormKey,
               child: Container(
@@ -142,7 +152,7 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         minWidth: 200.0,
                         height: 50.0,
                         onPressed: _loginInProgress ? null : _testSignIn,
-                        color: Colors.orange,
+                        color: Theme.of(context).primaryColor,
                         child: _loginInProgress
                             ? CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(
