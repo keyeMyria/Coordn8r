@@ -1,5 +1,6 @@
 import 'package:coordn8r/pages/login_page.dart';
 import 'package:coordn8r/pages/teams_page.dart';
+import 'package:coordn8r/pages/pre_login_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:community_material_icon/community_material_icon.dart';

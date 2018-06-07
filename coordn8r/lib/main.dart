@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:coordn8r/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:coordn8r/pages/teams_page.dart';
+import 'package:coordn8r/pages/pre_login_page.dart';
 import 'package:coordn8r/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -42,7 +43,7 @@ class Coordn8rApp extends StatelessWidget {
 //          ),
 //        ),
       ),
-      home: LoginPage(),
+      home: PreLoginPage(),
       routes: routes,
     );
   }

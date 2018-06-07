@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:coordn8r/pages/home_page.dart';
-import 'package:coordn8r/pages/teams_page.dart';
+import 'package:coordn8r/pages/pre_login_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:community_material_icon/community_material_icon.dart';
@@ -10,8 +10,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
 
-final FirebaseAuth auth = FirebaseAuth.instance;
-FirebaseUser user;
 // final GoogleSignIn _googleSignIn = new GoogleSignIn();
 
 class LoginPage extends StatefulWidget {

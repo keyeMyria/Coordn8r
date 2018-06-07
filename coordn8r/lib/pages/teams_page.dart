@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coordn8r/pages/login_page.dart';
+import 'package:coordn8r/pages/pre_login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 
@@ -20,8 +20,15 @@ class TeamsPage extends StatelessWidget {
             .collection('users')
             .document(user.uid)
             .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) const Text('Loading...');
+        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (!snapshot.hasData)
+            return Padding(
+              padding: EdgeInsets.all(8.0),
+              child: const Text(
+                'Loading...',
+                textAlign: TextAlign.center,
+              ),
+            );
           return ListView.builder(
             itemCount: snapshot.data[_obj].length,
             padding: const EdgeInsets.only(top: 10.0),
