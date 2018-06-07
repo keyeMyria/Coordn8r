@@ -49,10 +49,21 @@ class TeamsPage extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(5.0)),
         child: ListTile(
-          leading: Icon(
-            Icons.check,
-            color: Colors.orange,
-          ),
+          leading: objective['Status'] == 0 // not started
+              ? Icon(
+                  Icons.remove_circle_outline,
+                  color: Theme.of(context).primaryColor,
+                )
+              : (objective['Status'] == 1 // in progress
+                  ? Icon(
+                      Icons.remove_circle,
+                      color: Theme.of(context).primaryColor,
+                    )
+                  : Icon(
+                      // finished
+                      Icons.check,
+                      color: Theme.of(context).primaryColor,
+                    )),
           title: Text(
             objective['Title'].toString(),
           ),
