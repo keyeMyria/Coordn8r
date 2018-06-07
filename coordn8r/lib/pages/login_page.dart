@@ -61,10 +61,8 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     });
     await auth
         .signInWithEmailAndPassword(email: _email, password: _password)
-        .then((FirebaseUser u) async {
-      if (u != null && !u.isAnonymous && await u.getIdToken() != null) {
-        // TODO: implement page transition
-
+        .then((FirebaseUser u) {
+      if (u != null && !u.isAnonymous && u.getIdToken() != null) {
         user = u;
         Navigator.of(context).pushNamed(HomePage.tag);
       } else {
