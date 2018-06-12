@@ -14,7 +14,8 @@ void main() => runApp(new Coordn8rApp());
 class Coordn8rApp extends StatelessWidget {
   final routes = <String, WidgetBuilder>{
     LoginPage.tag: (context) => LoginPage(),
-    HomePage.tag: (context) => HomePage()
+    HomePage.tag: (context) => HomePage(),
+    PreLoginPage.tag: (context) => PreLoginPage()
   };
 
   // This widget is the root of your application.
@@ -31,10 +32,18 @@ class Coordn8rApp extends StatelessWidget {
         // "hot reload" (press "r" in the console where you ran "flutter run",
         // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
         // counter didn't reset back to zero; the application is not restarted.
-        primarySwatch: Colors.orange,
-        accentColor: Colors.orangeAccent,
-        splashColor: Colors.orangeAccent,
-        buttonColor: Colors.orange,
+
+        // Gray: 0xFF707070
+        // Light Blue: 0xFF8FD8FF
+        // Mid Blue: 0xFF599CC0
+        // Dark Blue: 0xFF2A5A74
+        // Gold: 0xFFC07A1F
+        // Brown: 0xFF74542A
+
+        primaryColor: Color(0xFF2A5674),
+        accentColor: Color(0xFF2A5674),
+        splashColor: Color(0xFF2A5A74),
+        buttonColor: Color(0xFF599CC0),
         scaffoldBackgroundColor: Colors.white,
 
 //        inputDecorationTheme: InputDecorationTheme(

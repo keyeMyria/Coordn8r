@@ -3,6 +3,8 @@ import 'package:coordn8r/pages/login_page.dart';
 import 'package:coordn8r/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
+import 'dart:io';
+import 'package:flutter/services.dart';
 
 final FirebaseAuth auth = FirebaseAuth.instance;
 FirebaseUser user;
@@ -28,7 +30,7 @@ class PreLoginPageState extends State<PreLoginPage>
       duration: Duration(milliseconds: 1000),
     );
     _iconAnimation =
-        Tween(begin: 0.0, end: 100.0).animate(_iconAnimationController)
+        Tween(begin: 0.5, end: 1.0).animate(_iconAnimationController)
           ..addListener(() => this.setState(() {}))
           ..addStatusListener((status) {
             if (status == AnimationStatus.forward) {
@@ -60,16 +62,14 @@ class PreLoginPageState extends State<PreLoginPage>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Container(
-          child: Text(
-            "Loading...",
-            textAlign: TextAlign.center,
-          ),
-          height: _iconAnimation.value,
-          width: _iconAnimation.value,
-          decoration: BoxDecoration(
-            border: Border.all(color: Theme.of(context).primaryColor),
-          ),
+        child: Stack(
+          children: <Widget>[
+            Image(
+              image: AssetImage("assets/logo/logo96.png"),
+              height: _iconAnimation.value * 96,
+              width: _iconAnimation.value * 96,
+            )
+          ],
         ),
       ),
     );

@@ -100,9 +100,10 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             InkWell(
-                child: FlutterLogo(
-                  colors: Theme.of(context).primaryColor,
-                  size: _iconAnimation.value,
+                child: Image(
+                  image: AssetImage("assets/logo/logo96.png"),
+                  height: _iconAnimation.value,
+                  width: _iconAnimation.value,
                 ),
                 onTap: () {
                   _email = "quintonhoffman22@gmail.com";
@@ -148,13 +149,16 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         minWidth: 200.0,
                         height: 50.0,
                         onPressed: _loginInProgress ? null : _testSignIn,
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).buttonColor,
                         child: _loginInProgress
                             ? CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                     Theme.of(context).textTheme.display1.color),
                               )
-                            : Text("Log In"),
+                            : Text(
+                                "Log In",
+                                style: TextStyle(color: Colors.white),
+                              ),
                       ),
                     ),
                     SizedBox(
