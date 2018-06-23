@@ -38,7 +38,23 @@ class HomePage extends StatelessWidget {
         length: 4,
         child: new Scaffold(
           appBar: new AppBar(
-            title: new Text('Coordn8r'),
+            leading: new Padding(padding: EdgeInsets.all(8.0),
+              child: InkWell(
+                child: Image(
+                  image: AssetImage("assets/logo/logo96.png"),
+                ),
+                //TODO make this trigger dialog asking whether or not we are sure
+                onTap: () => Navigator.of(context).pushNamed(LoginPage.tag),
+              )
+            ),
+            title: new Text('COORDN8R'),
+            actions: <Widget>[
+              new IconButton(icon: new Icon(Icons.settings_applications),
+                  iconSize: 40.0,
+                  color: Colors.white,
+                  //TODO set onPressed to open up a menu that lets you log out
+                  onPressed: () => Navigator.of(context).pushNamed(LoginPage.tag))
+            ],
           ),
           body: new SafeArea(
             child: new TabBarView(
