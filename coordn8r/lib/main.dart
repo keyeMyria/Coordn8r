@@ -21,6 +21,13 @@ class Coordn8rApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    const Color gray = Color(0xFF707070);
+    const Color lightBlue = Color(0xFF8FD8FF);
+    const Color midBlue = Color(0xFF599CC0);
+    const Color darkBlue = Color(0xFF2A5A74);
+    const Color gold = Color(0xFFC07A1F);
+    const Color brown = Color(0xFF74542A);
+
     return new MaterialApp(
       title: 'Coordn8r',
       theme: new ThemeData(
@@ -40,11 +47,16 @@ class Coordn8rApp extends StatelessWidget {
         // Gold: 0xFFC07A1F
         // Brown: 0xFF74542A
 
-        primaryColor: Color(0xFF2A5674),
-        accentColor: Color(0xFF2A5674),
-        splashColor: Color(0xFF2A5A74),
-        buttonColor: Color(0xFF599CC0),
+        primaryColor: darkBlue,
+        accentColor: lightBlue,
+        splashColor: darkBlue,
+        buttonColor: midBlue,
+        iconTheme: IconThemeData(color: gold),
+        accentIconTheme: IconThemeData(color: brown),
         scaffoldBackgroundColor: Colors.white,
+        indicatorColor: gold,
+        errorColor: Colors.red,
+        dividerColor: gray,
 
 //        inputDecorationTheme: InputDecorationTheme(
 //          border: OutlineInputBorder(

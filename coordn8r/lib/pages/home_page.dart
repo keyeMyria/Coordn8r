@@ -10,50 +10,50 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new WillPopScope(
-      onWillPop: () {
-        return showDialog(
-          context: context,
-//          barrierDismissible: false, // must press button
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Are you sure?'),
-              content: Text('Going back will log you out.'),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () => Navigator.of(context).pushNamed(
-                      LoginPage.tag), // also Navigator.of(context).pop(true)
-                  child: Text('Yes'),
-                ),
-                FlatButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text('No'),
-                )
-              ],
-            );
-          },
-        );
-      },
-      child: new DefaultTabController(
+    return new DefaultTabController(
         length: 4,
         child: new Scaffold(
           appBar: new AppBar(
-            leading: new Padding(padding: EdgeInsets.all(8.0),
+            leading: new Padding(
+              padding: EdgeInsets.all(8.0),
               child: InkWell(
                 child: Image(
                   image: AssetImage("assets/logo/logo96.png"),
                 ),
                 //TODO make this trigger dialog asking whether or not we are sure
-                onTap: () => Navigator.of(context).pushNamed(LoginPage.tag),
-              )
+                onTap: () => showDialog(
+                      context: context,
+//          barrierDismissible: false, // must press button
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('Are you sure?'),
+                          content: Text('Going back will log you out.'),
+                          actions: <Widget>[
+                            FlatButton(
+                              onPressed: () => Navigator.of(context).pushNamed(
+                                  LoginPage
+                                      .tag), // also Navigator.of(context).pop(true)
+                              child: Text('Yes'),
+                            ),
+                            FlatButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: Text('No'),
+                            )
+                          ],
+                        );
+                      },
+                    ),
+              ),
             ),
             title: new Text('COORDN8R'),
             actions: <Widget>[
-              new IconButton(icon: new Icon(Icons.settings_applications),
+              new IconButton(
+                  icon: new Icon(Icons.settings_applications),
                   iconSize: 40.0,
                   color: Colors.white,
                   //TODO set onPressed to open up a menu that lets you log out
-                  onPressed: () => Navigator.of(context).pushNamed(LoginPage.tag))
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed(LoginPage.tag))
             ],
           ),
           body: new SafeArea(
@@ -76,26 +76,24 @@ class HomePage extends StatelessWidget {
             ),
           ),
           bottomNavigationBar: new TabBar(
+            labelColor: Theme.of(context).indicatorColor,
+            unselectedLabelColor: Color(0xFF74542A),
             tabs: [
               new Tab(
                   icon: new Icon(
                 CommunityMaterialIcons.group,
-                color: Theme.of(context).primaryColor,
               )),
               new Tab(
                   icon: new Icon(
                 Icons.calendar_today,
-                color: Theme.of(context).primaryColor,
               )),
               new Tab(
                   icon: new Icon(
                 Icons.fiber_new,
-                color: Theme.of(context).primaryColor,
               )),
               new Tab(
                   icon: new Icon(
                 Icons.account_box,
-                color: Theme.of(context).primaryColor,
               )),
             ],
           ),
