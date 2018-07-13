@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:coordn8r/pages/login_page.dart';
+import 'package:coordn8r/pages/sign_up_page.dart';
 import 'package:flutter/material.dart';
 import 'package:coordn8r/pages/teams_page.dart';
 import 'package:coordn8r/pages/pre_login_page.dart';
@@ -15,7 +16,8 @@ class Coordn8rApp extends StatelessWidget {
   final routes = <String, WidgetBuilder>{
     LoginPage.tag: (context) => LoginPage(),
     HomePage.tag: (context) => HomePage(),
-    PreLoginPage.tag: (context) => PreLoginPage()
+    PreLoginPage.tag: (context) => PreLoginPage(),
+    SignUpPage.tag: (context) => SignUpPage(),
   };
 
   // This widget is the root of your application.

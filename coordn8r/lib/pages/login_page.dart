@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
+import 'package:coordn8r/pages/sign_up_page.dart';
 
 // final GoogleSignIn _googleSignIn = new GoogleSignIn();
 
@@ -175,9 +176,8 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         FlatButton(
                           splashColor: Colors.grey,
                           child: Text("Sign up"),
-                          onPressed: () {
-                            // TODO: implement sign up
-                          },
+                          onPressed: () =>
+                              Navigator.of(context).pushNamed(SignUpPage.tag),
                         ),
                         SizedBox(
                           width: 20.0,
