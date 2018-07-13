@@ -53,17 +53,13 @@ class HomePage extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               children: <Widget>[
-                DrawerHeader(
-                  child: Text(
-                    'Drawer Header',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24.0,
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                  ),
+                UserAccountsDrawerHeader(
+                  accountEmail: Text('email'),
+                  accountName: Text('name'),
+                  currentAccountPicture: CircleAvatar(),
+                  onDetailsPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
                 ListTile(
                   leading: CircleAvatar(
