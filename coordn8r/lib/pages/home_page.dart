@@ -51,6 +51,7 @@ class HomePage extends StatelessWidget {
         child: new Scaffold(
           drawer: Drawer(
             child: ListView(
+              shrinkWrap: true,
               padding: EdgeInsets.zero,
               children: <Widget>[
                 UserAccountsDrawerHeader(
