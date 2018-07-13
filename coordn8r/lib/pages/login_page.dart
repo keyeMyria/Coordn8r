@@ -96,6 +96,7 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         return;
       },
       child: Scaffold(
+        resizeToAvoidBottomPadding: false,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -103,6 +104,7 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 child: Hero(
                   tag: 'logo',
                   child: Image(
+                    fit: BoxFit.contain,
                     image: AssetImage("assets/logo/logo96.png"),
                     height: _iconAnimation.value,
                     width: _iconAnimation.value,

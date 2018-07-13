@@ -49,20 +49,48 @@ class HomePage extends StatelessWidget {
       child: new DefaultTabController(
         length: 4,
         child: new Scaffold(
-          appBar: new AppBar(
-            leading: new Padding(
-              padding: EdgeInsets.all(8.0),
-              child: InkWell(
-                child: Hero(
-                  tag: 'logo',
-                  child: Image(
-                    image: AssetImage("assets/logo/logo48.png"),
+          drawer: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                DrawerHeader(
+                  child: Text(
+                    'Drawer Header',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24.0,
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
-                //TODO make this trigger dialog asking whether or not we are sure
-                onTap: () => _logoutDialog(context),
-              ),
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: AssetImage('assets/logo/logo48.png'),
+                    backgroundColor: Colors.white,
+                  ),
+                  title: Text('Profile'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: Text('Probably Something Here'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: Text('Settings'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
             ),
+          ),
+          appBar: new AppBar(
             title: new Text('COORDN8R'),
             actions: <Widget>[
               new IconButton(
@@ -70,9 +98,8 @@ class HomePage extends StatelessWidget {
                   iconSize: 40.0,
                   color: Colors.white,
                   //TODO set onPressed to open up a menu that lets you log out
-                  onPressed: () => Navigator
-                      .of(context)
-                      .pushNamedAndRemoveUntil(
+                  onPressed: () => //Navigator.of(context).pop(true))
+                      Navigator.of(context).pushNamedAndRemoveUntil(
                           LoginPage.tag, ModalRoute.withName('/')))
             ],
           ),

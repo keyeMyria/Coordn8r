@@ -39,37 +39,36 @@ class TeamsPage extends StatelessWidget {
   }
 
   Widget _buildListItem(BuildContext context, objective) {
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.black12,
-              width: 2.0,
-            ),
-            borderRadius: BorderRadius.circular(5.0)),
-        child: ListTile(
-          leading: objective['Status'] == 0 // not started
-              ? Icon(
-                  Icons.remove_circle_outline,
-                  color: Theme.of(context).primaryColor,
-                )
-              : (objective['Status'] == 1 // in progress
-                  ? Icon(
-                      Icons.remove_circle,
-                      color: Theme.of(context).primaryColor,
-                    )
-                  : Icon(
-                      // finished
-                      Icons.check,
-                      color: Theme.of(context).primaryColor,
-                    )),
-          title: Text(
-            objective['Title'].toString(),
+    return Container(
+      margin: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.black12,
+            width: 2.0,
           ),
-          subtitle: Text(
-            objective['Description'].toString(),
-          ),
+          borderRadius: BorderRadius.circular(5.0)),
+      child: ListTile(
+        leading: objective['Status'] == 0 // not started
+            ? Icon(
+                Icons.remove_circle_outline,
+                color: Theme.of(context).primaryColor,
+              )
+            : (objective['Status'] == 1 // in progress
+                ? Icon(
+                    Icons.remove_circle,
+                    color: Theme.of(context).primaryColor,
+                  )
+                : Icon(
+                    // finished
+                    Icons.check,
+                    color: Theme.of(context).primaryColor,
+                  )),
+        title: Text(
+          objective['Title'].toString(),
+        ),
+        subtitle: Text(
+          objective['Description'].toString(),
         ),
       ),
     );
