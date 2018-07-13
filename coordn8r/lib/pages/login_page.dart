@@ -100,10 +100,13 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             InkWell(
-                child: Image(
-                  image: AssetImage("assets/logo/logo96.png"),
-                  height: _iconAnimation.value,
-                  width: _iconAnimation.value,
+                child: Hero(
+                  tag: 'logo',
+                  child: Image(
+                    image: AssetImage("assets/logo/logo96.png"),
+                    height: _iconAnimation.value,
+                    width: _iconAnimation.value,
+                  ),
                 ),
                 onTap: () {
                   _email = "quintonhoffman22@gmail.com";
