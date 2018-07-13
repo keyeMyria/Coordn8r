@@ -10,7 +10,7 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 FirebaseUser user;
 
 class PreLoginPage extends StatefulWidget {
-  static String tag = "pre_login_page";
+  static String tag = "/pre_login_page";
 
   @override
   State<PreLoginPage> createState() => PreLoginPageState();
@@ -55,7 +55,7 @@ class PreLoginPageState extends State<PreLoginPage>
   }
 
   void _go(tag) {
-    Navigator.of(context).pushNamed(tag);
+    Navigator.of(context).pushReplacementNamed(tag);
   }
 
   @override

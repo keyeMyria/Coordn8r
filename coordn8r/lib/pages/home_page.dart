@@ -5,22 +5,30 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'dart:async';
+import 'dart:io';
 
 class HomePage extends StatelessWidget {
-  static String tag = 'home_page';
+  static String tag = '/home_page';
 
   Future<void> _logoutDialog(context) {
+    final bool canPop = Navigator.canPop(context);
+
+    final String dialogText =
+        canPop ? 'Going back will log you out.' : 'This will close the app.';
+
     showDialog(
       context: context,
 //          barrierDismissible: false, // must press button
       builder: (context) {
         return AlertDialog(
           title: Text('Are you sure?'),
-          content: Text('Going back will log you out.'),
+          content: Text(dialogText),
           actions: <Widget>[
             FlatButton(
-              onPressed: () => Navigator.of(context).pushNamed(LoginPage.tag),
-              // also Navigator.of(context).pop(true)
+              onPressed: () => canPop
+                  ? Navigator.of(context).pushNamedAndRemoveUntil(
+                      LoginPage.tag, ModalRoute.withName('/'))
+                  : exit(0),
               child: Text('Yes'),
             ),
             FlatButton(
@@ -62,8 +70,10 @@ class HomePage extends StatelessWidget {
                   iconSize: 40.0,
                   color: Colors.white,
                   //TODO set onPressed to open up a menu that lets you log out
-                  onPressed: () =>
-                      Navigator.of(context).pushNamed(LoginPage.tag))
+                  onPressed: () => Navigator
+                      .of(context)
+                      .pushNamedAndRemoveUntil(
+                          LoginPage.tag, ModalRoute.withName('/')))
             ],
           ),
           body: new SafeArea(

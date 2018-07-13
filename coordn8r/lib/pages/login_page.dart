@@ -13,7 +13,7 @@ import 'dart:io';
 // final GoogleSignIn _googleSignIn = new GoogleSignIn();
 
 class LoginPage extends StatefulWidget {
-  static String tag = 'login_page';
+  static String tag = '/login_page';
 
   @override
   State<LoginPage> createState() => LoginPageState();
