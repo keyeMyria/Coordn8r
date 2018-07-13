@@ -97,105 +97,113 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         return;
       },
       child: Scaffold(
-        resizeToAvoidBottomPadding: false,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            InkWell(
-                child: Hero(
-                  tag: 'logo',
-                  child: Image(
-                    fit: BoxFit.contain,
-                    image: AssetImage("assets/logo/logo96.png"),
-                    height: 96.0,
-                    width: 96.0,
+        body: Center(
+          child: ListView(
+            primary: false,
+            shrinkWrap: true, // this plus "Center" centers everything
+            children: <Widget>[
+              InkWell(
+                  child: Hero(
+                    tag: 'logo',
+                    child: Image(
+                      fit: BoxFit.contain,
+                      image: AssetImage("assets/logo/logo96.png"),
+                      height: 96.0,
+                      width: 96.0,
+                    ),
+                  ),
+                  onTap: () {
+                    _email = "quintonhoffman22@gmail.com";
+                    _password = "TestPassword";
+                    _login();
+                  }),
+              Form(
+                key: _loginFormKey,
+                child: Container(
+                  padding: EdgeInsets.all(40.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      TextFormField(
+                        decoration: InputDecoration(
+                            labelText: "Email",
+                            hintText: "jane.doe@example.com"),
+                        keyboardType: TextInputType.emailAddress,
+                        autofocus: false,
+                        validator: (value) =>
+                            value.isEmpty || !value.contains('@')
+                                ? 'Please enter valid email'
+                                : null,
+                        onSaved: (val) => _email = val,
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: "Password",
+                          errorText: _errorText,
+                        ),
+                        keyboardType: TextInputType.text,
+                        obscureText: true,
+                        autofocus: false,
+                        validator: (value) => value.isEmpty
+                            ? 'Please enter valid password'
+                            : null,
+                        onSaved: (val) => _password = val,
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      Material(
+                        borderRadius: BorderRadius.circular(30.0),
+                        child: MaterialButton(
+                          minWidth: 200.0,
+                          height: 50.0,
+                          onPressed: _loginInProgress ? null : _testSignIn,
+                          color: Theme.of(context).buttonColor,
+                          child: _loginInProgress
+                              ? CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .display1
+                                          .color),
+                                )
+                              : Text(
+                                  "Log In",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          FlatButton(
+                            splashColor: Colors.grey,
+                            child: Text("Sign up"),
+                            onPressed: () =>
+                                Navigator.of(context).pushNamed(SignUpPage.tag),
+                          ),
+                          SizedBox(
+                            width: 20.0,
+                          ),
+                          FlatButton(
+                            splashColor: Colors.grey,
+                            onPressed: () {
+                              // TODO: implement forgot password
+                            },
+                            child: Text("Forgot Password"),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                onTap: () {
-                  _email = "quintonhoffman22@gmail.com";
-                  _password = "TestPassword";
-                  _login();
-                }),
-            Form(
-              key: _loginFormKey,
-              child: Container(
-                padding: EdgeInsets.all(40.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    TextFormField(
-                      decoration: InputDecoration(
-                          labelText: "Email", hintText: "jane.doe@example.com"),
-                      keyboardType: TextInputType.emailAddress,
-                      autofocus: false,
-                      validator: (value) =>
-                          value.isEmpty || !value.contains('@')
-                              ? 'Please enter valid email'
-                              : null,
-                      onSaved: (val) => _email = val,
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Password",
-                        errorText: _errorText,
-                      ),
-                      keyboardType: TextInputType.text,
-                      obscureText: true,
-                      autofocus: false,
-                      validator: (value) =>
-                          value.isEmpty ? 'Please enter valid password' : null,
-                      onSaved: (val) => _password = val,
-                    ),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    Material(
-                      borderRadius: BorderRadius.circular(30.0),
-                      child: MaterialButton(
-                        minWidth: 200.0,
-                        height: 50.0,
-                        onPressed: _loginInProgress ? null : _testSignIn,
-                        color: Theme.of(context).buttonColor,
-                        child: _loginInProgress
-                            ? CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    Theme.of(context).textTheme.display1.color),
-                              )
-                            : Text(
-                                "Log In",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        FlatButton(
-                          splashColor: Colors.grey,
-                          child: Text("Sign up"),
-                          onPressed: () =>
-                              Navigator.of(context).pushNamed(SignUpPage.tag),
-                        ),
-                        SizedBox(
-                          width: 20.0,
-                        ),
-                        FlatButton(
-                          splashColor: Colors.grey,
-                          onPressed: () {
-                            // TODO: implement forgot password
-                          },
-                          child: Text("Forgot Password"),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
