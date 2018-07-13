@@ -106,8 +106,8 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   child: Image(
                     fit: BoxFit.contain,
                     image: AssetImage("assets/logo/logo96.png"),
-                    height: _iconAnimation.value,
-                    width: _iconAnimation.value,
+                    height: 96.0,
+                    width: 96.0,
                   ),
                 ),
                 onTap: () {

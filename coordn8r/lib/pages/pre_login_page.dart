@@ -55,7 +55,7 @@ class PreLoginPageState extends State<PreLoginPage>
   }
 
   void _go(tag) {
-    Navigator.of(context).pushReplacementNamed(tag);
+    Navigator.of(context).pushNamed(tag);
   }
 
   @override
@@ -64,11 +64,14 @@ class PreLoginPageState extends State<PreLoginPage>
       body: Center(
         child: Stack(
           children: <Widget>[
-            Image(
-              image: AssetImage("assets/logo/logo96.png"),
-              height: _iconAnimation.value * 96,
-              width: _iconAnimation.value * 96,
-            )
+            Hero(
+              tag: 'logo',
+              child: Image(
+                image: AssetImage("assets/logo/logo96.png"),
+                height: _iconAnimation.value * 96,
+                width: _iconAnimation.value * 96,
+              ),
+            ),
           ],
         ),
       ),
