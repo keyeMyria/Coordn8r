@@ -1,4 +1,5 @@
 import 'package:coordn8r/pages/login_page.dart';
+import 'package:coordn8r/pages/pre_login_page.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -11,12 +12,60 @@ class SignUpPage extends StatefulWidget {
 class SignUpPageState extends State<SignUpPage> {
   final GlobalKey<FormState> _signUpFormKey = new GlobalKey<FormState>();
   String _email;
-  String _password;
-  String _errorText;
+  String _password1;
+  String _password2;
+  String _errorTextEmail;
+  String _errorTextPassword;
+  bool _obscureText1 = true;
+  bool _obscureText2 = true;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  void _validateSignUp() async {
+    final form = _signUpFormKey.currentState;
+    if (form.validate()) {
+      form.save();
+      _finishSignUp();
+    }
+  }
+
+  void _finishSignUp() {
+    setState(() {
+      _errorTextEmail = null;
+      _errorTextPassword =
+          _password1 != _password2 ? 'Passwords do not match' : null;
+    });
+
+    auth
+        .createUserWithEmailAndPassword(email: _email, password: _password1)
+        .catchError((err) {
+      var errorCode = err.toString();
+      print("ERROR CODE: " + errorCode);
+      setState(() {
+        switch (errorCode) {
+          case 'auth/email-already-in-use':
+            _errorTextEmail =
+                'An account is already associated with this email';
+            break;
+          case 'auth/invalid-email':
+            _errorTextEmail = 'Email is invalid';
+            break;
+          case 'auth/operation-not-allowed':
+            _errorTextEmail = 'Unknown Error';
+            break;
+          case 'auth/weak-password':
+            _errorTextPassword = 'Weak Password';
+            break;
+          default:
+            print(errorCode);
+            break;
+        }
+      });
+      return;
+    });
   }
 
   @override
@@ -56,6 +105,9 @@ class SignUpPageState extends State<SignUpPage> {
                               ),
                               keyboardType: TextInputType.text,
                               autofocus: false,
+                              validator: (value) => value.isEmpty
+                                  ? 'Please enter your first name'
+                                  : null,
                             ),
                           ),
                           SizedBox(
@@ -70,6 +122,9 @@ class SignUpPageState extends State<SignUpPage> {
                               ),
                               keyboardType: TextInputType.text,
                               autofocus: false,
+                              validator: (value) => value.isEmpty
+                                  ? 'Please enter your last name'
+                                  : null,
                             ),
                           ),
                         ],
@@ -78,6 +133,7 @@ class SignUpPageState extends State<SignUpPage> {
                         decoration: InputDecoration(
                           labelText: "Email",
                           hintText: "jane.doe@example.com",
+                          errorText: _errorTextEmail,
                         ),
                         keyboardType: TextInputType.emailAddress,
                         autofocus: false,
@@ -90,28 +146,54 @@ class SignUpPageState extends State<SignUpPage> {
                       TextFormField(
                         decoration: InputDecoration(
                           labelText: "Password",
+                          errorText: _errorTextPassword,
+                          suffixIcon: InkWell(
+                            child: Icon(
+                              Icons.remove_red_eye,
+                              color: _obscureText1
+                                  ? Colors.grey
+                                  : Theme.of(context).primaryColor,
+                            ),
+                            onTap: () {
+                              setState(() {
+                                _obscureText1 = !_obscureText1;
+                              });
+                            },
+                          ),
                         ),
                         keyboardType: TextInputType.text,
-                        obscureText: true,
+                        obscureText: _obscureText1,
                         autofocus: false,
-                        validator: (value) => value.isEmpty
-                            ? 'Please enter valid password'
+                        validator: (value) => value.length < 6
+                            ? 'Password must be 6 characters'
                             : null,
-                        onSaved: (val) {},
+                        onSaved: (val) => _password1 = val,
                       ),
                       TextFormField(
                         decoration: InputDecoration(
                           labelText: "Confirm Password",
+                          errorText: _errorTextPassword,
+                          suffixIcon: InkWell(
+                            child: Icon(
+                              Icons.remove_red_eye,
+                              color: _obscureText2
+                                  ? Colors.grey
+                                  : Theme.of(context).primaryColor,
+                            ),
+                            onTap: () {
+                              setState(() {
+                                _obscureText2 = !_obscureText2;
+                              });
+                            },
+                          ),
                         ),
                         keyboardType: TextInputType.text,
-                        obscureText: true,
+                        obscureText: _obscureText2,
                         autofocus: false,
                         validator: (value) => value.length < 6
                             ? 'Password must be 6 characters'
-                            : (value == _password
-                                ? 'Passwords do not match'
-                                : null),
-                        onSaved: (val) {},
+                            : null,
+                        onSaved: (val) => _password2 = val,
                       ),
                       SizedBox(
                         height: 30.0,
@@ -122,7 +204,7 @@ class SignUpPageState extends State<SignUpPage> {
                           minWidth: 200.0,
                           height: 50.0,
                           onPressed: () {
-                            // TODO: implement on pressed for sign up button
+                            _validateSignUp();
                           },
                           color: Theme.of(context).buttonColor,
                           child: Text(
