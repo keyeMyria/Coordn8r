@@ -7,45 +7,31 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'dart:async';
 import 'dart:io';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static String tag = '/home_page';
 
-  Future<void> _logoutDialog(context) {
-    final bool canPop = Navigator.canPop(context);
+  @override
+  State<StatefulWidget> createState() => HomePageState();
+}
 
-    final String dialogText =
-        canPop ? 'Going back will log you out.' : 'This will close the app.';
+class HomePageState extends State<HomePage> {
+  String _name;
 
-    showDialog(
-      context: context,
-//          barrierDismissible: false, // must press button
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Are you sure?'),
-          content: Text(dialogText),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () => canPop
-                  ? Navigator.of(context).pushNamedAndRemoveUntil(
-                      LoginPage.tag, ModalRoute.withName('/'))
-                  : exit(0),
-              child: Text('Yes'),
-            ),
-            FlatButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text('No'),
-            )
-          ],
-        );
-      },
-    );
-    return null;
+  @override
+  void initState() {
+    super.initState();
+    _name = user.displayName;
+    Firestore.instance.collection('users').document(user.uid).get().then((doc) {
+      setState(() {
+        _name = doc.data['First Name'] + ' ' + doc.data['Last Name'];
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return new WillPopScope(
-      onWillPop: () => _logoutDialog(context),
+      onWillPop: () async => true,
       child: new DefaultTabController(
         length: 4,
         child: new Scaffold(
@@ -55,8 +41,8 @@ class HomePage extends StatelessWidget {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 UserAccountsDrawerHeader(
-                  accountEmail: Text('email'),
-                  accountName: Text('name'),
+                  accountEmail: Text(user.email),
+                  accountName: Text(_name ?? ''),
                   currentAccountPicture: CircleAvatar(),
                   onDetailsPressed: () {
                     Navigator.pop(context);

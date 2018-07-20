@@ -33,39 +33,44 @@ class Coordn8rApp extends StatelessWidget {
     return new MaterialApp(
       title: 'Coordn8r',
       theme: new ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-        // counter didn't reset back to zero; the application is not restarted.
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
+          // counter didn't reset back to zero; the application is not restarted.
 
-        // Gray: 0xFF707070
-        // Light Blue: 0xFF8FD8FF
-        // Mid Blue: 0xFF599CC0
-        // Dark Blue: 0xFF2A5A74
-        // Gold: 0xFFC07A1F
-        // Brown: 0xFF74542A
+          // Gray: 0xFF707070
+          // Light Blue: 0xFF8FD8FF
+          // Mid Blue: 0xFF599CC0
+          // Dark Blue: 0xFF2A5A74
+          // Gold: 0xFFC07A1F
+          // Brown: 0xFF74542A
 
-        primaryColor: darkBlue,
-        accentColor: lightBlue,
-        splashColor: darkBlue,
-        buttonColor: midBlue,
-        iconTheme: IconThemeData(color: gold),
-        accentIconTheme: IconThemeData(color: brown),
-        scaffoldBackgroundColor: Colors.white,
-        indicatorColor: gold,
-        errorColor: Colors.red,
-        dividerColor: gray,
+          primaryColor: darkBlue,
+          accentColor: lightBlue,
+          splashColor: darkBlue,
+          buttonColor: midBlue,
+          iconTheme: IconThemeData(color: gold),
+          accentIconTheme: IconThemeData(color: brown),
+          scaffoldBackgroundColor: Colors.white,
+          indicatorColor: gold,
+          errorColor: Colors.red,
+          dividerColor: gray,
+          textTheme: new TextTheme(
+            button: TextStyle(
+              color: Colors.white,
+            ),
+          )
 
 //        inputDecorationTheme: InputDecorationTheme(
 //          border: OutlineInputBorder(
 //            borderRadius: BorderRadius.circular(5.0),
 //          ),
 //        ),
-      ),
+          ),
       home: PreLoginPage(),
       routes: routes,
     );

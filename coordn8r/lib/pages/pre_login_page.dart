@@ -55,7 +55,7 @@ class PreLoginPageState extends State<PreLoginPage>
   }
 
   void _go(tag) {
-    Navigator.of(context).pushNamed(tag);
+    Navigator.of(context).pushReplacementNamed(tag);
   }
 
   @override

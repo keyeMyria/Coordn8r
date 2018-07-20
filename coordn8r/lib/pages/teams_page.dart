@@ -5,8 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 
 class TeamsPage extends StatelessWidget {
-  final String _obj = 'Objectives';
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -19,8 +17,9 @@ class TeamsPage extends StatelessWidget {
         stream: Firestore.instance
             .collection('users')
             .document(user.uid)
+            .collection('objectives')
             .snapshots(),
-        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData)
             return Padding(
               padding: EdgeInsets.all(8.0),
@@ -30,10 +29,10 @@ class TeamsPage extends StatelessWidget {
               ),
             );
           return ListView.builder(
-            itemCount: snapshot.data[_obj].length,
+            itemCount: snapshot.data.documents.length,
             padding: const EdgeInsets.only(top: 10.0),
             itemBuilder: (context, index) =>
-                _buildListItem(context, snapshot.data[_obj][index]),
+                _buildListItem(context, snapshot.data.documents[index]),
           );
         });
   }

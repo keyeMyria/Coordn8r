@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coordn8r/pages/home_page.dart';
 import 'package:coordn8r/pages/login_page.dart';
 import 'package:coordn8r/pages/pre_login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -11,6 +14,8 @@ class SignUpPage extends StatefulWidget {
 
 class SignUpPageState extends State<SignUpPage> {
   final GlobalKey<FormState> _signUpFormKey = new GlobalKey<FormState>();
+  String _firstName;
+  String _lastName;
   String _email;
   String _password1;
   String _password2;
@@ -18,6 +23,7 @@ class SignUpPageState extends State<SignUpPage> {
   String _errorTextPassword;
   bool _obscureText1 = true;
   bool _obscureText2 = true;
+  bool _signUpInProgress = false;
 
   @override
   void initState() {
@@ -34,37 +40,56 @@ class SignUpPageState extends State<SignUpPage> {
 
   void _finishSignUp() {
     setState(() {
+      _signUpInProgress = true;
       _errorTextEmail = null;
       _errorTextPassword =
           _password1 != _password2 ? 'Passwords do not match' : null;
     });
 
+    if (_password1 != _password2) return;
+
     auth
         .createUserWithEmailAndPassword(email: _email, password: _password1)
         .catchError((err) {
-      var errorCode = err.toString();
-      print("ERROR CODE: " + errorCode);
+      var errorMessage = err.message;
       setState(() {
-        switch (errorCode) {
-          case 'auth/email-already-in-use':
-            _errorTextEmail =
-                'An account is already associated with this email';
-            break;
-          case 'auth/invalid-email':
-            _errorTextEmail = 'Email is invalid';
-            break;
-          case 'auth/operation-not-allowed':
-            _errorTextEmail = 'Unknown Error';
-            break;
-          case 'auth/weak-password':
-            _errorTextPassword = 'Weak Password';
-            break;
-          default:
-            print(errorCode);
-            break;
-        }
+        if (errorMessage.contains('email'))
+          _errorTextEmail = errorMessage;
+        else
+          _errorTextPassword = errorMessage;
       });
       return;
+    }).then((newUser) {
+      Firestore.instance.collection('users').document(newUser.uid).setData({
+        'First Name': _firstName,
+        'Last Name': _lastName,
+      }); // creates new instance in firestore
+      Firestore.instance
+          .collection('users')
+          .document(newUser.uid)
+          .collection('objectives')
+          .document()
+          .setData({
+        'Title': 'This is your first objective!',
+        'Description':
+            'On this page you will find all of your objectives. To the left '
+            'is the status of the objective with 3 stages: not started, in '
+            'progress, and complete.',
+        'Status': 1,
+        'Team': 'The Coordn8r Team',
+      });
+      user = newUser;
+
+      auth
+          .updateProfile(
+              new UserUpdateInfo()..displayName = _firstName + ' ' + _lastName)
+          .then((_) {
+        setState(() {
+          _signUpInProgress = false;
+        });
+
+        Navigator.of(context).pushReplacementNamed(HomePage.tag);
+      });
     });
   }
 
@@ -108,6 +133,7 @@ class SignUpPageState extends State<SignUpPage> {
                               validator: (value) => value.isEmpty
                                   ? 'Please enter your first name'
                                   : null,
+                              onSaved: (value) => _firstName = value,
                             ),
                           ),
                           SizedBox(
@@ -125,6 +151,7 @@ class SignUpPageState extends State<SignUpPage> {
                               validator: (value) => value.isEmpty
                                   ? 'Please enter your last name'
                                   : null,
+                              onSaved: (value) => _lastName = value,
                             ),
                           ),
                         ],
@@ -207,10 +234,15 @@ class SignUpPageState extends State<SignUpPage> {
                             _validateSignUp();
                           },
                           color: Theme.of(context).buttonColor,
-                          child: Text(
-                            "Create Account",
-                            style: TextStyle(color: Colors.white),
-                          ),
+                          child: _signUpInProgress
+                              ? CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Theme.of(context).textTheme.button.color),
+                                )
+                              : Text(
+                                  "Create Account",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                         ),
                       ),
                     ],
