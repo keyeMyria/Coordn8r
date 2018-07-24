@@ -33,6 +33,7 @@ class Coordn8rApp extends StatelessWidget {
     const Color darkBlue = Color(0xFF2A5A74);
     const Color gold = Color(0xFFC07A1F);
     const Color brown = Color(0xFF74542A);
+    const Color offWhite = Color(0xFFF9F9F9);
 
     return new MaterialApp(
       title: 'Coordn8r',
@@ -53,6 +54,7 @@ class Coordn8rApp extends StatelessWidget {
           // Gold: 0xFFC07A1F
           // Brown: 0xFF74542A
 
+          backgroundColor: offWhite,
           primaryColor: darkBlue,
           accentColor: lightBlue,
           splashColor: darkBlue,

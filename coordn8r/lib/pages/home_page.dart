@@ -17,6 +17,7 @@ class HomePage extends StatelessWidget {
     return new DefaultTabController(
       length: 4,
       child: new Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         drawer: Drawer(
           child: Flex(
             direction: Axis.vertical,
