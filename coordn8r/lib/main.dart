@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:coordn8r/pages/email_confirmation_page.dart';
+import 'package:coordn8r/pages/forgot_password_page.dart';
 import 'package:coordn8r/pages/login_page.dart';
 import 'package:coordn8r/pages/sign_up_page.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,8 @@ class Coordn8rApp extends StatelessWidget {
     HomePage.tag: (context) => HomePage(),
     PreLoginPage.tag: (context) => PreLoginPage(),
     SignUpPage.tag: (context) => SignUpPage(),
+    EmailConfirmationPage.tag: (context) => EmailConfirmationPage(),
+    ForgotPasswordPage.tag: (context) => ForgotPasswordPage(),
   };
 
   // This widget is the root of your application.
@@ -76,3 +80,6 @@ class Coordn8rApp extends StatelessWidget {
     );
   }
 }
+
+// For creating futures use:
+// new Future<bool>.value(true)

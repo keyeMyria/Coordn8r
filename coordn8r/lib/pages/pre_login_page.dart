@@ -10,7 +10,7 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 FirebaseUser user;
 
 class PreLoginPage extends StatefulWidget {
-  static String tag = "/pre_login_page";
+  static final String tag = "/pre_login_page";
 
   @override
   State<PreLoginPage> createState() => PreLoginPageState();
@@ -20,6 +20,7 @@ class PreLoginPageState extends State<PreLoginPage>
     with SingleTickerProviderStateMixin {
   AnimationController _iconAnimationController;
   Animation<double> _iconAnimation;
+  Duration _duration = Duration(milliseconds: 1000);
 
   @override
   void initState() {
@@ -27,23 +28,27 @@ class PreLoginPageState extends State<PreLoginPage>
 
     _iconAnimationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: _duration,
     );
-    _iconAnimation =
-        Tween(begin: 0.5, end: 1.0).animate(_iconAnimationController)
-          ..addListener(() => this.setState(() {}))
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.forward) {
-              setState(() {});
-            } else if (status == AnimationStatus.completed) {
-              setState(() {
-                _checkLoginStatus().then((loginStatus) =>
-                    _go(loginStatus ? HomePage.tag : LoginPage.tag));
-              });
-            }
-          });
+    _iconAnimation = Tween(begin: 0.5, end: 1.0)
+        .animate(_iconAnimationController)
+          ..addListener(() => this.setState(() {}));
+//          ..addStatusListener((status) {
+//            if (status == AnimationStatus.forward) {
+//              setState(() {});
+//            } else if (status == AnimationStatus.completed && _notVisited) {
+//              setState(() {
+//                print('completed');
+//
+//              });
+//            }
+//          });
 
     _iconAnimationController.forward();
+    Timer(
+        _duration,
+        () => _checkLoginStatus()
+            .then((loginStatus) => loginStatus ? _goHome() : _goLogin()));
 
     // do animation
     // once finished
@@ -54,8 +59,22 @@ class PreLoginPageState extends State<PreLoginPage>
     return user != null;
   }
 
-  void _go(tag) {
-    Navigator.of(context).pushReplacementNamed(tag);
+  void _goHome() {
+    Navigator.of(context).pushReplacement(PageRouteBuilder(
+          pageBuilder: (context, animation, _) => HomePage(),
+          transitionDuration: Duration(milliseconds: 1000),
+          transitionsBuilder: (context, animation, _, child) => FadeTransition(
+                opacity: Tween<double>(
+                  begin: 0.0,
+                  end: 1.0,
+                ).animate(animation),
+                child: child,
+              ),
+        ));
+  }
+
+  void _goLogin() {
+    Navigator.of(context).pushReplacementNamed(LoginPage.tag);
   }
 
   @override

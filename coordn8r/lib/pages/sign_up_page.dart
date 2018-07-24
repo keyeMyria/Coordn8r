@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coordn8r/pages/email_confirmation_page.dart';
 import 'package:coordn8r/pages/home_page.dart';
 import 'package:coordn8r/pages/login_page.dart';
 import 'package:coordn8r/pages/pre_login_page.dart';
@@ -14,8 +15,8 @@ class SignUpPage extends StatefulWidget {
 
 class SignUpPageState extends State<SignUpPage> {
   final GlobalKey<FormState> _signUpFormKey = new GlobalKey<FormState>();
-  String _firstName;
-  String _lastName;
+  static String firstNameSignUp;
+  static String lastNameSignUp;
   String _email;
   String _password1;
   String _password2;
@@ -57,12 +58,13 @@ class SignUpPageState extends State<SignUpPage> {
           _errorTextEmail = errorMessage;
         else
           _errorTextPassword = errorMessage;
+        _signUpInProgress = false;
       });
       return;
     }).then((newUser) {
       Firestore.instance.collection('users').document(newUser.uid).setData({
-        'First Name': _firstName,
-        'Last Name': _lastName,
+        'First Name': firstNameSignUp,
+        'Last Name': lastNameSignUp,
       }); // creates new instance in firestore
       Firestore.instance
           .collection('users')
@@ -81,8 +83,8 @@ class SignUpPageState extends State<SignUpPage> {
       user = newUser;
 
       auth
-          .updateProfile(
-              new UserUpdateInfo()..displayName = _firstName + ' ' + _lastName)
+          .updateProfile(new UserUpdateInfo()
+            ..displayName = firstNameSignUp + ' ' + lastNameSignUp)
           .then((_) {
         setState(() {
           _signUpInProgress = false;
@@ -112,142 +114,143 @@ class SignUpPageState extends State<SignUpPage> {
               ),
             ),
             Form(
-                key: _signUpFormKey,
-                child: Container(
-                  padding: EdgeInsets.all(40.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'First Name',
-                                hintText: 'Jane',
-                              ),
-                              keyboardType: TextInputType.text,
-                              autofocus: false,
-                              validator: (value) => value.isEmpty
-                                  ? 'Please enter your first name'
-                                  : null,
-                              onSaved: (value) => _firstName = value,
+              key: _signUpFormKey,
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 40.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'First Name',
+                              hintText: 'Jane',
                             ),
-                          ),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Expanded(
-                            // must have this to not produce error
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Last Name',
-                                hintText: 'Doe',
-                              ),
-                              keyboardType: TextInputType.text,
-                              autofocus: false,
-                              validator: (value) => value.isEmpty
-                                  ? 'Please enter your last name'
-                                  : null,
-                              onSaved: (value) => _lastName = value,
-                            ),
-                          ),
-                        ],
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Email",
-                          hintText: "jane.doe@example.com",
-                          errorText: _errorTextEmail,
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        autofocus: false,
-                        validator: (value) =>
-                            value.isEmpty || !value.contains('@')
-                                ? 'Please enter valid email'
+                            keyboardType: TextInputType.text,
+                            autofocus: false,
+                            validator: (value) => value.isEmpty
+                                ? 'Please enter your first name'
                                 : null,
-                        onSaved: (val) => _email = val,
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Password",
-                          errorText: _errorTextPassword,
-                          suffixIcon: InkWell(
-                            child: Icon(
-                              Icons.remove_red_eye,
-                              color: _obscureText1
-                                  ? Colors.grey
-                                  : Theme.of(context).primaryColor,
-                            ),
-                            onTap: () {
-                              setState(() {
-                                _obscureText1 = !_obscureText1;
-                              });
-                            },
+                            onSaved: (value) => firstNameSignUp = value,
                           ),
                         ),
-                        keyboardType: TextInputType.text,
-                        obscureText: _obscureText1,
-                        autofocus: false,
-                        validator: (value) => value.length < 6
-                            ? 'Password must be 6 characters'
-                            : null,
-                        onSaved: (val) => _password1 = val,
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Confirm Password",
-                          errorText: _errorTextPassword,
-                          suffixIcon: InkWell(
-                            child: Icon(
-                              Icons.remove_red_eye,
-                              color: _obscureText2
-                                  ? Colors.grey
-                                  : Theme.of(context).primaryColor,
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        Expanded(
+                          // must have this to not produce error
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Last Name',
+                              hintText: 'Doe',
                             ),
-                            onTap: () {
-                              setState(() {
-                                _obscureText2 = !_obscureText2;
-                              });
-                            },
+                            keyboardType: TextInputType.text,
+                            autofocus: false,
+                            validator: (value) => value.isEmpty
+                                ? 'Please enter your last name'
+                                : null,
+                            onSaved: (value) => lastNameSignUp = value,
                           ),
                         ),
-                        keyboardType: TextInputType.text,
-                        obscureText: _obscureText2,
-                        autofocus: false,
-                        validator: (value) => value.length < 6
-                            ? 'Password must be 6 characters'
-                            : null,
-                        onSaved: (val) => _password2 = val,
+                      ],
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Email",
+                        hintText: "jane.doe@example.com",
+                        errorText: _errorTextEmail,
                       ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      Material(
-                        borderRadius: BorderRadius.circular(30.0),
-                        child: MaterialButton(
-                          minWidth: 200.0,
-                          height: 50.0,
-                          onPressed: () {
-                            _validateSignUp();
+                      keyboardType: TextInputType.emailAddress,
+                      autofocus: false,
+                      validator: (value) =>
+                          value.isEmpty || !value.contains('@')
+                              ? 'Please enter valid email'
+                              : null,
+                      onSaved: (val) => _email = val,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        errorText: _errorTextPassword,
+                        suffixIcon: InkWell(
+                          child: Icon(
+                            Icons.remove_red_eye,
+                            color: _obscureText1
+                                ? Colors.grey
+                                : Theme.of(context).primaryColor,
+                          ),
+                          onTap: () {
+                            setState(() {
+                              _obscureText1 = !_obscureText1;
+                            });
                           },
-                          color: Theme.of(context).buttonColor,
-                          child: _signUpInProgress
-                              ? CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Theme.of(context).textTheme.button.color),
-                                )
-                              : Text(
-                                  "Create Account",
-                                  style: TextStyle(color: Colors.white),
-                                ),
                         ),
                       ),
-                    ],
-                  ),
-                )),
+                      keyboardType: TextInputType.text,
+                      obscureText: _obscureText1,
+                      autofocus: false,
+                      validator: (value) => value.length < 6
+                          ? 'Password must be 6 characters'
+                          : null,
+                      onSaved: (val) => _password1 = val,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: "Confirm Password",
+                        errorText: _errorTextPassword,
+                        suffixIcon: InkWell(
+                          child: Icon(
+                            Icons.remove_red_eye,
+                            color: _obscureText2
+                                ? Colors.grey
+                                : Theme.of(context).primaryColor,
+                          ),
+                          onTap: () {
+                            setState(() {
+                              _obscureText2 = !_obscureText2;
+                            });
+                          },
+                        ),
+                      ),
+                      keyboardType: TextInputType.text,
+                      obscureText: _obscureText2,
+                      autofocus: false,
+                      validator: (value) => value.length < 6
+                          ? 'Password must be 6 characters'
+                          : null,
+                      onSaved: (val) => _password2 = val,
+                    ),
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    Material(
+                      borderRadius: BorderRadius.circular(30.0),
+                      child: MaterialButton(
+                        minWidth: 200.0,
+                        height: 50.0,
+                        onPressed: () {
+                          _validateSignUp();
+                        },
+                        color: Theme.of(context).buttonColor,
+                        child: _signUpInProgress
+                            ? CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context).textTheme.button.color),
+                              )
+                            : Text(
+                                "Create Account",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

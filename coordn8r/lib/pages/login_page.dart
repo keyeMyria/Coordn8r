@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:coordn8r/pages/email_confirmation_page.dart';
+import 'package:coordn8r/pages/forgot_password_page.dart';
 import 'package:coordn8r/pages/home_page.dart';
 import 'package:coordn8r/pages/pre_login_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,7 +16,7 @@ import 'package:coordn8r/pages/sign_up_page.dart';
 // final GoogleSignIn _googleSignIn = new GoogleSignIn();
 
 class LoginPage extends StatefulWidget {
-  static String tag = '/login_page';
+  static final String tag = '/login_page';
 
   @override
   State<LoginPage> createState() => LoginPageState();
@@ -66,7 +68,21 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       if (u != null && !u.isAnonymous && u.getIdToken() != null) {
         user = u;
         _loginInProgress = false;
-        Navigator.of(context).pushReplacementNamed(HomePage.tag);
+//        if (!u.isEmailVerified)
+//          Navigator.of(context).pushNamed(EmailConfirmationPage.tag);
+//        else
+        Navigator.of(context).pushReplacement(PageRouteBuilder(
+              pageBuilder: (context, animation, _) => HomePage(),
+              transitionDuration: Duration(milliseconds: 500),
+              transitionsBuilder: (context, animation, _, child) =>
+                  FadeTransition(
+                    opacity: Tween<double>(
+                      begin: 0.0,
+                      end: 1.0,
+                    ).animate(animation),
+                    child: child,
+                  ),
+            ));
       } else {
         setState(() {
           _loginInProgress = false;
@@ -74,8 +90,9 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
         });
       }
     }).catchError((e) => setState(() {
+              print('ERROR: ' + e.toString());
               _loginInProgress = false;
-              _errorText = 'Invalid email and password combination';
+              _errorText = 'Error experienced with server';
             }));
 
 //    assert(user != null);
@@ -181,9 +198,9 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         ),
                         FlatButton(
                           splashColor: Colors.grey,
-                          onPressed: () {
-                            // TODO: implement forgot password
-                          },
+                          onPressed: () => Navigator
+                              .of(context)
+                              .pushNamed(ForgotPasswordPage.tag),
                           child: Text("Forgot Password"),
                         ),
                       ],

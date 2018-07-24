@@ -1,4 +1,5 @@
 import 'package:coordn8r/pages/login_page.dart';
+import 'package:coordn8r/pages/sign_up_page.dart';
 import 'package:coordn8r/pages/teams_page.dart';
 import 'package:coordn8r/pages/pre_login_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,26 +9,8 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'dart:async';
 import 'dart:io';
 
-class HomePage extends StatefulWidget {
-  static String tag = '/home_page';
-
-  @override
-  State<StatefulWidget> createState() => HomePageState();
-}
-
-class HomePageState extends State<HomePage> {
-  String _name;
-
-  @override
-  void initState() {
-    super.initState();
-    _name = user.displayName;
-    Firestore.instance.collection('users').document(user.uid).get().then((doc) {
-      setState(() {
-        _name = doc.data['First Name'] + ' ' + doc.data['Last Name'];
-      });
-    });
-  }
+class HomePage extends StatelessWidget {
+  static final String tag = '/home_page';
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +28,10 @@ class HomePageState extends State<HomePage> {
                 children: <Widget>[
                   UserAccountsDrawerHeader(
                     accountEmail: Text(user.email),
-                    accountName: Text(_name ?? ''),
+                    accountName: Text(user.displayName ??
+                        SignUpPageState.firstNameSignUp +
+                            ' ' +
+                            SignUpPageState.lastNameSignUp),
                     currentAccountPicture: CircleAvatar(
                       backgroundImage: AssetImage('assets/logo/logo72.png'),
                       backgroundColor: Theme.of(context).primaryColor,
