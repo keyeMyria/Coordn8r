@@ -67,6 +67,7 @@ class Coordn8rApp extends StatelessWidget {
           dividerColor: gray,
           textTheme: new TextTheme(
             button: TextStyle(
+              fontSize: 16.0,
               color: Colors.white,
             ),
           )

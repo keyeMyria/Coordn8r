@@ -3,16 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coordn8r/pages/pre_login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
+import 'package:coordn8r/my_expansion_tile.dart';
 
 class TeamsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-//    return ListView(
-//      padding: EdgeInsets.all(20.0),
-//      shrinkWrap: true, // CHECK this ???
-//      children: getTeams(),
-//    );
     return StreamBuilder(
         stream: Firestore.instance
             .collection('users')
@@ -37,27 +32,31 @@ class TeamsPage extends StatelessWidget {
         });
   }
 
-  Widget _buildStatusIcon(context, status) {
+  Widget _buildStatusIcon(color, status, [iconSize]) {
     switch (status) {
       case 0:
         return Icon(
           Icons.remove_circle_outline,
-          color: Theme.of(context).primaryColor,
+          color: color,
+          size: iconSize,
         );
       case 1:
         return Icon(
           Icons.radio_button_checked,
-          color: Theme.of(context).primaryColor,
+          color: color,
+          size: iconSize,
         );
       case 2:
         return Icon(
           Icons.check_circle,
-          color: Theme.of(context).primaryColor,
+          color: color,
+          size: iconSize,
         );
       default:
         return Icon(
-          Icons.check_circle_outline,
-          color: Theme.of(context).primaryColor,
+          Icons.error,
+          color: color,
+          size: iconSize,
         );
     }
   }
@@ -71,17 +70,44 @@ class TeamsPage extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Expanded(
-              child: _buildStatusIcon(context, objective['Status']),
+              child: _buildStatusIcon(
+                  Theme.of(context).primaryColor, objective['Status'], 26.0),
               flex: 1,
             ),
             Expanded(
               flex: 6,
               child: Column(
                 children: <Widget>[
-                  Text('${objective['Team']}'),
-                  ExpansionTile(
-                    title: Text('${objective['Title']}'),
-                    trailing: Text('Date goes here'),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Expanded(
+                          flex: 2,
+                          child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                '${objective['Team']}',
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                              ))),
+                      Expanded(
+                        flex: 1,
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: Text('Date goes here'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  MyExpansionTile(
+                    title: Text(
+                      '${objective['Title']}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    expansionPadding: const EdgeInsets.only(left: 0.0),
+                    topBorder: true,
+                    titleColor: Theme.of(context).textTheme.subhead.color,
                     children: <Widget>[
                       Text(
                         objective['Description'].toString(),

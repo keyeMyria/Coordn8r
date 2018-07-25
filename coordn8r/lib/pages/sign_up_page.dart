@@ -4,6 +4,7 @@ import 'package:coordn8r/pages/home_page.dart';
 import 'package:coordn8r/pages/login_page.dart';
 import 'package:coordn8r/pages/pre_login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -252,14 +253,23 @@ class SignUpPageState extends State<SignUpPage> {
               ),
             ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('Already have an account?'),
-                FlatButton(
-                  padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                  splashColor: Colors.grey,
-                  child: Text("Log in"),
-                  onPressed: () => Navigator.pop(context),
+                Text(
+                  'Already have an account?',
+                  style: Theme.of(context).textTheme.subhead,
+                ),
+                Container(
+                  constraints: BoxConstraints.tightFor(width: 60.0),
+                  child: FlatButton(
+                    padding: const EdgeInsets.all(0.0),
+                    splashColor: Colors.grey,
+                    child: Text(
+                      "Log in",
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
                 ),
               ],
             ),
