@@ -118,13 +118,16 @@ class ObjectiveState extends State<Objective> {
                 children: <Widget>[
                   Expanded(
                     flex: 5,
-                    child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Text(
-                        '${widget.objective['Team']}',
-                        softWrap: !_hidden,
-                        overflow: _hidden ? TextOverflow.ellipsis : null,
-                        style: Theme.of(context).textTheme.title,
+                    child: ClipRect(
+                      child: Align(
+                        //heightFactor: ,
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
+                          '${widget.objective['Team']}',
+                          softWrap: !_hidden,
+                          overflow: _hidden ? TextOverflow.ellipsis : null,
+                          style: Theme.of(context).textTheme.title,
+                        ),
                       ),
                     ),
                   ),

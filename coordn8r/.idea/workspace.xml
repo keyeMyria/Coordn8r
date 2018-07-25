@@ -10,11 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe7056d8-60e7-439d-8740-232a0c43f68e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/lib/my_expansion_tile.dart" afterPath="$PROJECT_DIR$/lib/my_expansion_tile.dart" />
       <change beforePath="$PROJECT_DIR$/lib/pages/teams_page.dart" afterPath="$PROJECT_DIR$/lib/pages/teams_page.dart" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" afterPath="$PROJECT_DIR$/pubspec.lock" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" afterPath="$PROJECT_DIR$/pubspec.yaml" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
@@ -66,8 +63,8 @@
       <file leaf-file-name="teams_page.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/pages/teams_page.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="424">
-              <caret line="171" column="48" lean-forward="false" selection-start-line="171" selection-start-column="48" selection-end-line="171" selection-end-column="48" />
+            <state relative-caret-position="214">
+              <caret line="122" column="26" lean-forward="false" selection-start-line="122" selection-start-column="26" selection-end-line="122" selection-end-column="26" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -78,8 +75,8 @@
       <file leaf-file-name="my_expansion_tile.dart" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/my_expansion_tile.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="190" column="53" lean-forward="false" selection-start-line="190" selection-start-column="53" selection-end-line="190" selection-end-column="53" />
+            <state relative-caret-position="0">
+              <caret line="100" column="16" lean-forward="false" selection-start-line="100" selection-start-column="16" selection-end-line="100" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -120,6 +117,7 @@
       <find>expansionPadding</find>
       <find>_teamHidden</find>
       <find>_titleHidden</find>
+      <find>_kExpand</find>
     </findStrings>
   </component>
   <component name="FlutterPreviewView" splitter-proportion="0.7624021" />
@@ -789,16 +787,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/my_expansion_tile.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="190" column="53" lean-forward="false" selection-start-line="190" selection-start-column="53" selection-end-line="190" selection-end-column="53" />
+        <state relative-caret-position="0">
+          <caret line="100" column="16" lean-forward="false" selection-start-line="100" selection-start-column="16" selection-end-line="100" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/pages/teams_page.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="171" column="48" lean-forward="false" selection-start-line="171" selection-start-column="48" selection-end-line="171" selection-end-column="48" />
+        <state relative-caret-position="214">
+          <caret line="122" column="26" lean-forward="false" selection-start-line="122" selection-start-column="26" selection-end-line="122" selection-end-column="26" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

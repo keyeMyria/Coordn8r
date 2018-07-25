@@ -29,6 +29,7 @@ class MyExpansionTile extends StatefulWidget {
     this.onExpansionChanged,
     this.children = const <Widget>[],
     this.trailing,
+    this.duration = const Duration(milliseconds: 200),
     this.expansionPadding = const EdgeInsets.symmetric(
       horizontal: 4.0,
     ),
@@ -70,6 +71,8 @@ class MyExpansionTile extends StatefulWidget {
   /// A widget to display instead of a rotating arrow icon.
   final Widget trailing;
 
+  final Duration duration;
+
   final EdgeInsets expansionPadding;
 
   final EdgeInsets titlePadding;
@@ -105,7 +108,8 @@ class _MyExpansionTileState extends State<MyExpansionTile>
   @override
   void initState() {
     super.initState();
-    _controller = new AnimationController(duration: _kExpand, vsync: this);
+    _controller =
+        new AnimationController(duration: widget.duration, vsync: this);
     _easeOutAnimation =
         new CurvedAnimation(parent: _controller, curve: Curves.easeOut);
     _easeInAnimation =
