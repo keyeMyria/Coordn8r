@@ -4,6 +4,7 @@ import 'package:coordn8r/pages/pre_login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:coordn8r/my_expansion_tile.dart';
+import 'package:intl/intl.dart';
 
 class TeamsPage extends StatelessWidget {
   @override
@@ -30,6 +31,44 @@ class TeamsPage extends StatelessWidget {
                 _buildListItem(context, snapshot.data.documents[index]),
           );
         });
+  }
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot objective) {
+    return Card(
+      key: Key(objective.documentID),
+      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+      child: Container(
+          padding: const EdgeInsets.only(
+            top: 12.0,
+            right: 12.0,
+            bottom: 12.0,
+          ),
+          child: new Objective(
+            objective: objective,
+          )),
+    );
+  }
+}
+
+class Objective extends StatefulWidget {
+  const Objective({
+    Key key,
+    this.objective,
+  }) : super(key: key);
+
+  final DocumentSnapshot objective;
+
+  @override
+  State<Objective> createState() => ObjectiveState();
+}
+
+class ObjectiveState extends State<Objective> {
+  bool _hidden;
+
+  @override
+  void initState() {
+    super.initState();
+    _hidden = true;
   }
 
   Widget _buildStatusIcon(color, status, [iconSize]) {
@@ -61,66 +100,83 @@ class TeamsPage extends StatelessWidget {
     }
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot objective) {
-    return Card(
-      key: Key(objective.documentID),
-      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: _buildStatusIcon(
-                  Theme.of(context).primaryColor, objective['Status'], 26.0),
-              flex: 1,
-            ),
-            Expanded(
-              flex: 6,
-              child: Column(
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: _buildStatusIcon(
+              Theme.of(context).primaryColor, widget.objective['Status'], 26.0),
+          flex: 1,
+        ),
+        Expanded(
+          flex: 4,
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Expanded(
-                          flex: 2,
-                          child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Text(
-                                '${objective['Team']}',
-                                softWrap: false,
-                                overflow: TextOverflow.ellipsis,
-                              ))),
-                      Expanded(
-                        flex: 1,
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: Text('Date goes here'),
-                        ),
+                  Expanded(
+                    flex: 5,
+                    child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        '${widget.objective['Team']}',
+                        softWrap: !_hidden,
+                        overflow: _hidden ? TextOverflow.ellipsis : null,
+                        style: Theme.of(context).textTheme.title,
                       ),
-                    ],
-                  ),
-                  MyExpansionTile(
-                    title: Text(
-                      '${objective['Title']}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                    expansionPadding: const EdgeInsets.only(left: 0.0),
-                    topBorder: true,
-                    titleColor: Theme.of(context).textTheme.subhead.color,
-                    children: <Widget>[
-                      Text(
-                        objective['Description'].toString(),
-//                maxLines: 5,
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        DateFormat('h:mm a')
+                                .format(DateTime.now())
+                                .toLowerCase() +
+                            '\n' +
+                            DateFormat('M/d/yy').format(DateTime.now()),
+                        textAlign: TextAlign.end,
+                        maxLines: 2,
+                        overflow: TextOverflow.fade,
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+              MyExpansionTile(
+                key: PageStorageKey(widget.objective.documentID),
+                // keep expanded when scrolled out of view
+                title: Text(
+                  '${widget.objective['Title']}',
+                  maxLines: _hidden ? 2 : null,
+                  overflow: _hidden ? TextOverflow.ellipsis : null,
+                ),
+                expansionPadding: const EdgeInsets.only(left: 0.0),
+                bottomBorder: true,
+                titleColor: Theme.of(context).textTheme.subhead.color,
+                onExpansionChanged: (expanded) {
+                  setState(() {
+                    if (expanded) {
+                      _hidden = false;
+                    } else {
+                      _hidden = true;
+                    }
+                  });
+                },
+                children: <Widget>[
+                  Text(
+                    '${widget.objective['Description']}',
+                    textAlign: TextAlign.justify,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

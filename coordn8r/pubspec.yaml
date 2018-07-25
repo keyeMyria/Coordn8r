@@ -20,6 +20,9 @@ dependencies:
   # Google sign in capabilities
   google_sign_in: ^3.0.4
 
+  # Used for date and time formatting
+  intl: ^0.15.7
+
 
 dev_dependencies:
   flutter_test:

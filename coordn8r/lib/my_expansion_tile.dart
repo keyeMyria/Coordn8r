@@ -32,6 +32,8 @@ class MyExpansionTile extends StatefulWidget {
     this.expansionPadding = const EdgeInsets.symmetric(
       horizontal: 4.0,
     ),
+    this.titlePadding =
+        const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
     this.topBorder = false,
     this.bottomBorder = false,
     this.borderColor,
@@ -69,6 +71,8 @@ class MyExpansionTile extends StatefulWidget {
   final Widget trailing;
 
   final EdgeInsets expansionPadding;
+
+  final EdgeInsets titlePadding;
 
   final bool topBorder;
 
@@ -154,9 +158,6 @@ class _MyExpansionTileState extends State<MyExpansionTile>
             top: widget.topBorder
                 ? new BorderSide(color: borderSideColor)
                 : new BorderSide(color: Colors.transparent),
-            bottom: widget.bottomBorder
-                ? new BorderSide(color: borderSideColor)
-                : new BorderSide(color: Colors.transparent),
           )),
       child: new Column(
         mainAxisSize: MainAxisSize.min,
@@ -165,6 +166,7 @@ class _MyExpansionTileState extends State<MyExpansionTile>
             data:
                 new IconThemeData(color: _iconColor.evaluate(_easeInAnimation)),
             child: new ListTile(
+              contentPadding: widget.titlePadding,
               onTap: _handleTap,
               leading: widget.leading,
               title: new DefaultTextStyle(
@@ -185,7 +187,17 @@ class _MyExpansionTileState extends State<MyExpansionTile>
           new ClipRect(
             child: new Align(
               heightFactor: _easeInAnimation.value,
-              child: child,
+              child: Container(
+                padding: const EdgeInsets.only(top: 4.0),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: widget.bottomBorder
+                        ? new BorderSide(color: borderSideColor)
+                        : new BorderSide(color: Colors.transparent),
+                  ),
+                ),
+                child: child,
+              ),
             ),
           ),
         ],
