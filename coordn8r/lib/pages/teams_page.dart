@@ -37,39 +37,62 @@ class TeamsPage extends StatelessWidget {
         });
   }
 
+  Widget _buildStatusIcon(context, status) {
+    switch (status) {
+      case 0:
+        return Icon(
+          Icons.remove_circle_outline,
+          color: Theme.of(context).primaryColor,
+        );
+      case 1:
+        return Icon(
+          Icons.radio_button_checked,
+          color: Theme.of(context).primaryColor,
+        );
+      case 2:
+        return Icon(
+          Icons.check_circle,
+          color: Theme.of(context).primaryColor,
+        );
+      default:
+        return Icon(
+          Icons.check_circle_outline,
+          color: Theme.of(context).primaryColor,
+        );
+    }
+  }
+
   Widget _buildListItem(BuildContext context, DocumentSnapshot objective) {
     return Card(
       key: Key(objective.documentID),
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
       child: Container(
-        padding: const EdgeInsets.all(4.0),
-        child: ListTile(
-          trailing: objective['Status'] == 0 // not started
-              ? Icon(
-                  Icons.remove_circle_outline,
-                  color: Theme.of(context).primaryColor,
-                )
-              : (objective['Status'] == 1 // in progress
-                  ? Icon(
-                      Icons.remove_circle,
-                      color: Theme.of(context).primaryColor,
-                    )
-                  : Icon(
-                      // finished
-                      Icons.check,
-                      color: Theme.of(context).primaryColor,
-                    )),
-          title: Text('${objective['Team']}'),
-          subtitle: ExpansionTile(
-            title: Text('${objective['Title']}'),
-            trailing: Text('Date goes here'),
-            children: <Widget>[
-              Text(
-                objective['Description'].toString(),
-                maxLines: 5,
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: _buildStatusIcon(context, objective['Status']),
+              flex: 1,
+            ),
+            Expanded(
+              flex: 6,
+              child: Column(
+                children: <Widget>[
+                  Text('${objective['Team']}'),
+                  ExpansionTile(
+                    title: Text('${objective['Title']}'),
+                    trailing: Text('Date goes here'),
+                    children: <Widget>[
+                      Text(
+                        objective['Description'].toString(),
+//                maxLines: 5,
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
