@@ -169,37 +169,41 @@ class _MyExpansionTileState extends State<MyExpansionTile>
           IconTheme.merge(
             data:
                 new IconThemeData(color: _iconColor.evaluate(_easeInAnimation)),
-            child: new ListTile(
-              contentPadding: widget.titlePadding,
-              onTap: _handleTap,
-              leading: widget.leading,
-              title: new DefaultTextStyle(
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .subhead
-                    .copyWith(color: titleColor),
-                child: widget.title,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: widget.bottomBorder
+                      ? new BorderSide(color: borderSideColor)
+                      : new BorderSide(color: Colors.transparent),
+                ),
               ),
-              trailing: widget.trailing ??
-                  new RotationTransition(
-                    turns: _iconTurns,
-                    child: const Icon(Icons.expand_more),
-                  ),
+              child: new ListTile(
+                dense: true,
+                contentPadding: widget.titlePadding,
+                onTap: _handleTap,
+                leading: widget.leading,
+                title: new DefaultTextStyle(
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .subhead
+                      .copyWith(color: titleColor),
+                  child: widget.title,
+                ),
+                trailing: widget.trailing ??
+                    new RotationTransition(
+                      turns: _iconTurns,
+                      child: const Icon(Icons.expand_more),
+                    ),
+              ),
             ),
           ),
           new ClipRect(
             child: new Align(
+              alignment: Alignment.topLeft,
               heightFactor: _easeInAnimation.value,
-              child: Container(
-                padding: const EdgeInsets.only(top: 4.0),
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: widget.bottomBorder
-                        ? new BorderSide(color: borderSideColor)
-                        : new BorderSide(color: Colors.transparent),
-                  ),
-                ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8.0),
                 child: child,
               ),
             ),

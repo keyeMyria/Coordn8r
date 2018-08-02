@@ -45,6 +45,7 @@ class TeamsPage extends StatelessWidget {
           ),
           child: new Objective(
             objective: objective,
+            key: PageStorageKey(objective.documentID + 'obj'),
           )),
     );
   }
@@ -54,21 +55,40 @@ class Objective extends StatefulWidget {
   const Objective({
     Key key,
     this.objective,
+    this.duration = const Duration(milliseconds: 200),
   }) : super(key: key);
 
   final DocumentSnapshot objective;
+  final Duration duration;
 
   @override
   State<Objective> createState() => ObjectiveState();
 }
 
-class ObjectiveState extends State<Objective> {
+class ObjectiveState extends State<Objective>
+    with SingleTickerProviderStateMixin {
   bool _hidden;
+  AnimationController _controller;
+  CurvedAnimation _easeOutAnimation;
+  CurvedAnimation _easeInAnimation;
+  bool _isExpanded = false;
 
   @override
   void initState() {
     super.initState();
     _hidden = true;
+    _controller =
+        new AnimationController(duration: widget.duration, vsync: this);
+    _easeOutAnimation =
+        new CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    _easeInAnimation =
+        new CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   Widget _buildStatusIcon(color, status, [iconSize]) {
@@ -120,13 +140,16 @@ class ObjectiveState extends State<Objective> {
                     flex: 5,
                     child: ClipRect(
                       child: Align(
-                        //heightFactor: ,
                         alignment: Alignment.bottomLeft,
                         child: Text(
                           '${widget.objective['Team']}',
                           softWrap: !_hidden,
                           overflow: _hidden ? TextOverflow.ellipsis : null,
-                          style: Theme.of(context).textTheme.title,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .title
+                              .copyWith(fontSize: 16.0),
                         ),
                       ),
                     ),
@@ -144,6 +167,11 @@ class ObjectiveState extends State<Objective> {
                         textAlign: TextAlign.end,
                         maxLines: 2,
                         overflow: TextOverflow.fade,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .subhead
+                            .copyWith(fontSize: 12.0),
                       ),
                     ),
                   ),
@@ -156,16 +184,29 @@ class ObjectiveState extends State<Objective> {
                   '${widget.objective['Title']}',
                   maxLines: _hidden ? 2 : null,
                   overflow: _hidden ? TextOverflow.ellipsis : null,
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .subhead
+                      .copyWith(fontSize: 12.0),
                 ),
-                expansionPadding: const EdgeInsets.only(left: 0.0),
+                expansionPadding: const EdgeInsets.only(left: 8.0),
+                titlePadding: const EdgeInsets.only(left: 8.0),
                 bottomBorder: true,
                 titleColor: Theme.of(context).textTheme.subhead.color,
                 onExpansionChanged: (expanded) {
                   setState(() {
+                    _isExpanded = expanded;
                     if (expanded) {
                       _hidden = false;
+                      _controller.forward();
                     } else {
                       _hidden = true;
+                      _controller.reverse().then<void>((Null value) {
+                        setState(() {
+                          // Rebuild without widget.children.
+                        });
+                      });
                     }
                   });
                 },
