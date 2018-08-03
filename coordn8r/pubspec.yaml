@@ -23,6 +23,9 @@ dependencies:
   # Used for date and time formatting
   intl: ^0.15.7
 
+  # Slidable widgets
+  flutter_slidable: ^0.4.0
+
 
 dev_dependencies:
   flutter_test:

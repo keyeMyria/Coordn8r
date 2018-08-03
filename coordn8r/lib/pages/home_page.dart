@@ -139,6 +139,7 @@ class HomePage extends StatelessWidget {
         ),
         body: new SafeArea(
           child: new TabBarView(
+            physics: NeverScrollableScrollPhysics(),
             children: [
               new TeamsPage(),
               new Icon(
@@ -156,27 +157,45 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: new TabBar(
-          labelColor: Theme.of(context).indicatorColor,
-          unselectedLabelColor: Color(0xFF74542A),
-          tabs: [
-            new Tab(
-                icon: new Icon(
-              CommunityMaterialIcons.group,
-            )),
-            new Tab(
-                icon: new Icon(
-              Icons.calendar_today,
-            )),
-            new Tab(
-                icon: new Icon(
-              Icons.fiber_new,
-            )),
-            new Tab(
-                icon: new Icon(
-              Icons.account_box,
-            )),
-          ],
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).backgroundColor,
+
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 4.0,
+              )
+            ],
+//            border: Border(
+//              top: BorderSide(
+//                color: Colors.black12,
+//              ),
+//            ),
+          ),
+          child: new TabBar(
+            indicatorWeight: 3.0,
+            labelColor: Theme.of(context).iconTheme.color,
+            unselectedLabelColor: Theme.of(context).accentIconTheme.color,
+            tabs: [
+              new Tab(
+                  icon: new Icon(
+                CommunityMaterialIcons.group,
+              )),
+              new Tab(
+                  icon: new Icon(
+                Icons.calendar_today,
+              )),
+              new Tab(
+                  icon: new Icon(
+                Icons.fiber_new,
+              )),
+              new Tab(
+                  icon: new Icon(
+                Icons.account_box,
+              )),
+            ],
+          ),
         ),
       ),
     );
