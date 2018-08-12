@@ -7,34 +7,53 @@ import 'dart:async';
 import 'package:coordn8r/my_expansion_tile.dart';
 import 'package:intl/intl.dart';
 
-class TeamsPage extends StatelessWidget {
+class TeamsPage extends StatefulWidget {
+  const TeamsPage({Key key}) : super(key: key);
+
+  @override
+  TeamsPageState createState() => TeamsPageState();
+}
+
+class TeamsPageState extends State<TeamsPage> {
+  final key = GlobalKey<TeamsPageState>();
+  Widget _streamContent;
+  Widget _objectiveContent;
+  bool _stream = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _streamContent = StreamBuilder(
+      stream: Firestore.instance
+          .collection('users')
+          .document(user.uid)
+          .collection('objectives')
+          .snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData)
+          return Padding(
+            padding: EdgeInsets.all(8.0),
+            child: const Text(
+              'Loading...',
+              textAlign: TextAlign.center,
+            ),
+          );
+        return ListView.builder(
+          primary: false,
+          itemCount: snapshot.data.documents.length,
+          padding: const EdgeInsets.only(top: 10.0),
+          itemBuilder: (context, index) =>
+              _buildListItem(context, snapshot.data.documents[index]),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints.expand(),
-      child: StreamBuilder(
-          stream: Firestore.instance
-              .collection('users')
-              .document(user.uid)
-              .collection('objectives')
-              .snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData)
-              return Padding(
-                padding: EdgeInsets.all(8.0),
-                child: const Text(
-                  'Loading...',
-                  textAlign: TextAlign.center,
-                ),
-              );
-            return ListView.builder(
-              primary: false,
-              itemCount: snapshot.data.documents.length,
-              padding: const EdgeInsets.only(top: 10.0),
-              itemBuilder: (context, index) =>
-                  _buildListItem(context, snapshot.data.documents[index]),
-            );
-          }),
+      child: _stream ? _streamContent : _objectiveContent,
     );
   }
 
@@ -46,7 +65,7 @@ class TeamsPage extends StatelessWidget {
       Icons.error,
     ];
 
-    final Objective _obj = new Objective(
+    final Objective _obj = Objective(
       objective: objective,
       iconList: _iconList,
     );
@@ -78,33 +97,59 @@ class TeamsPage extends StatelessWidget {
           ))
         : null;
 
+    // final key = Key(objective.documentID);
     return Card(
       key: Key(objective.documentID),
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-      child: Slidable(
-        key: Key(objective.documentID + 'slide'),
-        slideToDismissDelegate: SlideToDismissDrawerDelegate(
-          dismissThresholds: <SlideActionType, double>{
-            SlideActionType.primary: 1.0,
-          },
-          onWillDismiss: (a) {
-            print('delete ' + key.toString());
-            return false;
-          },
-        ),
-        actionExtentRatio: 0.25,
-        showAllActionsThreshold: 0.75,
-        delegate: SlidableDrawerDelegate(),
-        child: Container(
-          padding: const EdgeInsets.only(
-            top: 12.0,
-            right: 12.0,
-            bottom: 12.0,
+      child: GestureDetector(
+//        onTap: () => print('Tapped'),
+//        onDoubleTap: () => print('Double Tapped'),
+        onLongPress: () {
+          setState(() {
+            _objectiveContent = Stack(
+              children: <Widget>[
+                ObjectiveFullPage(
+                  objective: objective,
+                ),
+                FlatButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _stream = true;
+                      });
+                      _objectiveContent = null;
+                    },
+                    icon: Icon(Icons.arrow_back),
+                    label: Text('Back'))
+              ],
+            );
+            _stream = false;
+          });
+        },
+        child: Slidable(
+          key: Key(objective.documentID + 'slide'),
+          closeOnScroll: false,
+          slideToDismissDelegate: SlideToDismissDrawerDelegate(
+            dismissThresholds: <SlideActionType, double>{
+              SlideActionType.primary: 1.0,
+            },
+            onWillDismiss: (a) {
+              return false;
+            },
           ),
-          child: _obj,
+          actionExtentRatio: 0.25,
+          showAllActionsThreshold: 0.75,
+          delegate: SlidableDrawerDelegate(),
+          child: Container(
+            padding: const EdgeInsets.only(
+              top: 12.0,
+              right: 12.0,
+              bottom: 12.0,
+            ),
+            child: _obj,
+          ),
+          actions: _actions,
+          secondaryActions: _secondaryActions,
         ),
-        actions: _actions,
-        secondaryActions: _secondaryActions,
       ),
     );
   }
@@ -126,30 +171,13 @@ class Objective extends StatefulWidget {
   State<Objective> createState() => ObjectiveState();
 }
 
-class ObjectiveState extends State<Objective>
-    with SingleTickerProviderStateMixin {
+class ObjectiveState extends State<Objective> {
   bool _hidden;
-  AnimationController _controller;
-  CurvedAnimation _easeOutAnimation;
-  CurvedAnimation _easeInAnimation;
-  bool _isExpanded = false;
 
   @override
   void initState() {
     super.initState();
     _hidden = true;
-    _controller =
-        new AnimationController(duration: widget.duration, vsync: this);
-    _easeOutAnimation =
-        new CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    _easeInAnimation =
-        new CurvedAnimation(parent: _controller, curve: Curves.easeIn);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -242,6 +270,40 @@ class ObjectiveState extends State<Objective>
           ),
         ),
       ],
+    );
+  }
+}
+
+class ObjectiveFullPage extends StatelessWidget {
+  const ObjectiveFullPage({
+    Key key,
+    @required this.objective,
+  }) : super(key: key);
+
+  final DocumentSnapshot objective;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(objective['Title']),
+            SizedBox(
+              height: 20.0,
+            ),
+            Text(objective['Team']),
+            SizedBox(
+              height: 20.0,
+            ),
+            Text(objective['Description']),
+          ],
+        ),
+      ),
     );
   }
 }
