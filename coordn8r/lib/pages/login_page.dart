@@ -29,7 +29,7 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   String _email;
   String _password;
   String _errorText;
-  bool _loginInProgress = false;
+  bool _loginInProgress = false; // TODO: Move to a stream
 
   @override
   void initState() {

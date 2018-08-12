@@ -10,29 +10,32 @@ import 'package:intl/intl.dart';
 class TeamsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: Firestore.instance
-            .collection('users')
-            .document(user.uid)
-            .collection('objectives')
-            .snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData)
-            return Padding(
-              padding: EdgeInsets.all(8.0),
-              child: const Text(
-                'Loading...',
-                textAlign: TextAlign.center,
-              ),
+    return ConstrainedBox(
+      constraints: BoxConstraints.expand(),
+      child: StreamBuilder(
+          stream: Firestore.instance
+              .collection('users')
+              .document(user.uid)
+              .collection('objectives')
+              .snapshots(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData)
+              return Padding(
+                padding: EdgeInsets.all(8.0),
+                child: const Text(
+                  'Loading...',
+                  textAlign: TextAlign.center,
+                ),
+              );
+            return ListView.builder(
+              primary: false,
+              itemCount: snapshot.data.documents.length,
+              padding: const EdgeInsets.only(top: 10.0),
+              itemBuilder: (context, index) =>
+                  _buildListItem(context, snapshot.data.documents[index]),
             );
-          return ListView.builder(
-            primary: false,
-            itemCount: snapshot.data.documents.length,
-            padding: const EdgeInsets.only(top: 10.0),
-            itemBuilder: (context, index) =>
-                _buildListItem(context, snapshot.data.documents[index]),
-          );
-        });
+          }),
+    );
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot objective) {
