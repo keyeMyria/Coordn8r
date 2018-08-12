@@ -21,6 +21,7 @@ class PreLoginPageState extends State<PreLoginPage>
   AnimationController _iconAnimationController;
   Animation<double> _iconAnimation;
   Duration _duration = Duration(milliseconds: 1000);
+  CurvedAnimation _easeOutAnimation;
 
   @override
   void initState() {
@@ -30,19 +31,14 @@ class PreLoginPageState extends State<PreLoginPage>
       vsync: this,
       duration: _duration,
     );
-    _iconAnimation = Tween(begin: 0.5, end: 1.0)
-        .animate(_iconAnimationController)
-          ..addListener(() => this.setState(() {}));
-//          ..addStatusListener((status) {
-//            if (status == AnimationStatus.forward) {
-//              setState(() {});
-//            } else if (status == AnimationStatus.completed && _notVisited) {
-//              setState(() {
-//                print('completed');
-//
-//              });
-//            }
-//          });
+
+    _easeOutAnimation = CurvedAnimation(
+      parent: _iconAnimationController,
+      curve: Curves.easeOut,
+    );
+
+    _iconAnimation = Tween(begin: 0.5, end: 1.0).animate(_easeOutAnimation)
+      ..addListener(() => this.setState(() {}));
 
     _iconAnimationController.forward();
     Timer(
@@ -62,7 +58,7 @@ class PreLoginPageState extends State<PreLoginPage>
   void _goHome() {
     Navigator.of(context).pushReplacement(PageRouteBuilder(
           pageBuilder: (context, animation, _) => HomePage(),
-          transitionDuration: Duration(milliseconds: 1000),
+          transitionDuration: Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, _, child) => FadeTransition(
                 opacity: Tween<double>(
                   begin: 0.0,
