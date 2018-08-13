@@ -210,12 +210,9 @@ class Objective extends StatefulWidget {
 }
 
 class ObjectiveState extends State<Objective> {
-  bool _hidden;
-
   @override
   void initState() {
     super.initState();
-    _hidden = true;
   }
 
   @override
@@ -289,7 +286,7 @@ class ObjectiveState extends State<Objective> {
                       .of(context)
                       .textTheme
                       .subhead
-                      .copyWith(fontSize: 12.0),
+                      .copyWith(fontSize: 14.0),
                 ),
                 expansionPadding: const EdgeInsets.only(left: 8.0),
                 titlePadding: const EdgeInsets.only(left: 8.0),
@@ -299,6 +296,11 @@ class ObjectiveState extends State<Objective> {
                   Text(
                     '${widget.objective['Description']}',
                     textAlign: TextAlign.justify,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .subhead
+                        .copyWith(fontSize: 12.0),
                   ),
                 ],
               ),
