@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   final PageStorageKey _teamsPageKey = PageStorageKey('teamsPage');
+  final PageStorageBucket _bucket = PageStorageBucket();
   int _index;
   List<Widget> _pages;
 
@@ -172,7 +173,10 @@ class HomePageState extends State<HomePage> {
         title: new Text('COORDN8R'),
       ),
       body: new SafeArea(
-        child: _pages[_index],
+        child: PageStorage(
+          child: _pages[_index],
+          bucket: _bucket,
+        ),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(

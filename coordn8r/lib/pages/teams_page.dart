@@ -18,41 +18,42 @@ class TeamsPageState extends State<TeamsPage> {
   Widget _streamContent;
   Widget _objectiveContent;
   bool _stream;
+  BuildContext
+      _teamsPageContext; // Need this for the page storage -- not sure why but it works
 
   @override
   void initState() {
     super.initState();
-    print('Building TeamsPageState');
-    _stream = _objectiveContent == null;
-    _streamContent = StreamBuilder(
-      stream: Firestore.instance
-          .collection('users')
-          .document(user.uid)
-          .collection('objectives')
-          .snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData)
-          return Padding(
-            padding: EdgeInsets.all(8.0),
-            child: const Text(
-              'Loading...',
-              textAlign: TextAlign.center,
-            ),
-          );
-        return ListView.builder(
-          primary: false,
-          itemCount: snapshot.data.documents.length,
-          padding: const EdgeInsets.only(top: 10.0),
-          itemBuilder: (context, index) =>
-              _buildListItem(context, snapshot.data.documents[index]),
-        );
-      },
-    );
+    _teamsPageContext = context;
+    DocumentSnapshot oldObjective = PageStorage
+        .of(_teamsPageContext)
+        .readState(_teamsPageContext, identifier: ValueKey('open'));
+    _objectiveContent = oldObjective != null
+        ? Stack(
+            children: <Widget>[
+              ObjectiveFullPage(
+                objective: oldObjective,
+              ),
+              FlatButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      _stream = true;
+                      _objectiveContent = null;
+                      PageStorage.of(_teamsPageContext).writeState(
+                          _teamsPageContext, null,
+                          identifier: ValueKey('open'));
+                    });
+                  },
+                  icon: Icon(Icons.arrow_back),
+                  label: Text('Back'))
+            ],
+          )
+        : null;
+    _stream = true;
   }
 
   @override
   void dispose() {
-    print('DISPOSING');
     super.dispose();
   }
 
@@ -60,7 +61,31 @@ class TeamsPageState extends State<TeamsPage> {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints.expand(),
-      child: _stream ? _streamContent : _objectiveContent,
+      child: StreamBuilder(
+        stream: Firestore.instance
+            .collection('users')
+            .document(user.uid)
+            .collection('objectives')
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData)
+            return Padding(
+              padding: EdgeInsets.all(8.0),
+              child: const Text(
+                'Loading...',
+                textAlign: TextAlign.center,
+              ),
+            );
+          return _objectiveContent ??
+              ListView.builder(
+                primary: false,
+                itemCount: snapshot.data.documents.length,
+                padding: const EdgeInsets.only(top: 10.0),
+                itemBuilder: (context, index) =>
+                    _buildListItem(context, snapshot.data.documents[index]),
+              );
+        },
+      ),
     );
   }
 
@@ -109,8 +134,8 @@ class TeamsPageState extends State<TeamsPage> {
       key: Key(objective.documentID),
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
       child: GestureDetector(
-//        onTap: () => print('Tapped'),
-//        onDoubleTap: () => print('Double Tapped'),
+//        onTap: () {},
+//        onDoubleTap: () {},
         onLongPress: () {
           setState(() {
             _objectiveContent = Stack(
@@ -122,14 +147,20 @@ class TeamsPageState extends State<TeamsPage> {
                     onPressed: () {
                       setState(() {
                         _stream = true;
+                        _objectiveContent = null;
+                        PageStorage.of(_teamsPageContext).writeState(
+                            _teamsPageContext, null,
+                            identifier: ValueKey('open'));
                       });
-                      _objectiveContent = null;
                     },
                     icon: Icon(Icons.arrow_back),
                     label: Text('Back'))
               ],
             );
             _stream = false;
+            PageStorage.of(_teamsPageContext).writeState(
+                _teamsPageContext, objective,
+                identifier: ValueKey('open'));
           });
         },
         child: Slidable(
