@@ -15,14 +15,15 @@ class TeamsPage extends StatefulWidget {
 }
 
 class TeamsPageState extends State<TeamsPage> {
-  final key = GlobalKey<TeamsPageState>();
   Widget _streamContent;
   Widget _objectiveContent;
-  bool _stream = true;
+  bool _stream;
 
   @override
   void initState() {
     super.initState();
+    print('Building TeamsPageState');
+    _stream = _objectiveContent == null;
     _streamContent = StreamBuilder(
       stream: Firestore.instance
           .collection('users')
@@ -47,6 +48,12 @@ class TeamsPageState extends State<TeamsPage> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    print('DISPOSING');
+    super.dispose();
   }
 
   @override
@@ -204,18 +211,16 @@ class ObjectiveState extends State<Objective> {
                 children: <Widget>[
                   Expanded(
                     flex: 5,
-                    child: ClipRect(
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          '${widget.objective['Team']}',
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .title
-                              .copyWith(fontSize: 16.0),
-                        ),
+                    child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        '${widget.objective['Team']}',
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .title
+                            .copyWith(fontSize: 16.0),
                       ),
                     ),
                   ),

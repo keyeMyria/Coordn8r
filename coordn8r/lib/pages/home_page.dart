@@ -11,39 +11,44 @@ import 'dart:io';
 
 class HomePage extends StatefulWidget {
   static final String tag = '/home_page';
+  const HomePage({Key key}) : super(key: key);
 
   @override
   HomePageState createState() => HomePageState();
 }
 
 class HomePageState extends State<HomePage> {
+  final PageStorageKey _teamsPageKey = PageStorageKey('teamsPage');
   int _index;
-  final List<Widget> _pages = [
-    new TeamsPage(),
-    Center(
-      child: new Icon(
-        Icons.calendar_today,
-        color: Colors.blueAccent,
-      ),
-    ),
-    Center(
-      child: new Icon(
-        Icons.fiber_new,
-        color: Colors.blueAccent,
-      ),
-    ),
-    Center(
-      child: new Icon(
-        Icons.account_box,
-        color: Colors.blueAccent,
-      ),
-    ),
-  ];
+  List<Widget> _pages;
 
   @override
   void initState() {
     super.initState();
     _index = 0;
+    _pages = [
+      new TeamsPage(
+        key: _teamsPageKey,
+      ),
+      Center(
+        child: new Icon(
+          Icons.calendar_today,
+          color: Colors.blueAccent,
+        ),
+      ),
+      Center(
+        child: new Icon(
+          Icons.fiber_new,
+          color: Colors.blueAccent,
+        ),
+      ),
+      Center(
+        child: new Icon(
+          Icons.account_box,
+          color: Colors.blueAccent,
+        ),
+      ),
+    ];
   }
 
   @override
@@ -198,28 +203,28 @@ class HomePageState extends State<HomePage> {
               icon: new Icon(
                 CommunityMaterialIcons.group,
               ),
-//              backgroundColor: Colors.blue,
+              backgroundColor: Theme.of(context).primaryColor,
             ),
             BottomNavigationBarItem(
               title: Text('Calendar'),
               icon: new Icon(
                 Icons.calendar_today,
               ),
-//              backgroundColor: Colors.red,
+              backgroundColor: Theme.of(context).primaryColor,
             ),
             BottomNavigationBarItem(
               title: Text('Teams'),
               icon: new Icon(
                 Icons.fiber_new,
               ),
-//              backgroundColor: Colors.green,
+              backgroundColor: Theme.of(context).primaryColor,
             ),
             BottomNavigationBarItem(
               title: Text('Account'),
               icon: new Icon(
                 Icons.account_box,
               ),
-//              backgroundColor: Colors.purple,
+              backgroundColor: Theme.of(context).primaryColor,
             ),
           ],
         ),

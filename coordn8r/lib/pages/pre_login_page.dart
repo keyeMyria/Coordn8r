@@ -50,6 +50,12 @@ class PreLoginPageState extends State<PreLoginPage>
     // once finished
   }
 
+  @override
+  void dispose() {
+    _iconAnimationController.dispose();
+    super.dispose();
+  }
+
   Future<bool> _checkLoginStatus() async {
     user = await auth.currentUser();
     return user != null;
