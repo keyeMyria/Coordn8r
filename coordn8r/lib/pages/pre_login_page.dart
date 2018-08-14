@@ -32,20 +32,16 @@ class PreLoginPageState extends State<PreLoginPage>
 
     _easeOutAnimation = CurvedAnimation(
       parent: _iconAnimationController,
-      curve: Curves.easeOut,
+      curve: Curves.elasticInOut,
     );
 
-    _iconAnimation = Tween(begin: 0.5, end: 1.0).animate(_easeOutAnimation)
+    _iconAnimation = Tween(begin: 0.0, end: 1.0).animate(_easeOutAnimation)
       ..addListener(() => this.setState(() {}))
       ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) print(status);
+        if (status == AnimationStatus.completed)
+          _checkLoginStatus()
+              .then((loginStatus) => loginStatus ? _goHome() : _goLogin());
       });
-
-    _iconAnimationController.forward();
-    Timer(
-        _duration,
-        () => _checkLoginStatus()
-            .then((loginStatus) => loginStatus ? _goHome() : _goLogin()));
 
     // do animation
     // once finished
@@ -82,6 +78,7 @@ class PreLoginPageState extends State<PreLoginPage>
 
   @override
   Widget build(BuildContext context) {
+    _iconAnimationController.forward();
     return Scaffold(
       body: Center(
         child: Stack(
