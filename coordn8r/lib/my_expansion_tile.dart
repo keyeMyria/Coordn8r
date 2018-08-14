@@ -29,7 +29,7 @@ class MyExpansionTile extends StatefulWidget {
     this.onExpansionChanged,
     this.children = const <Widget>[],
     this.trailing,
-    this.duration = const Duration(milliseconds: 200),
+    this.duration = _kExpand,
     this.expansionPadding = const EdgeInsets.symmetric(
       horizontal: 4.0,
     ),

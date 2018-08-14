@@ -1,16 +1,9 @@
-import 'dart:async';
-
-import 'package:coordn8r/pages/email_confirmation_page.dart';
 import 'package:coordn8r/pages/forgot_password_page.dart';
 import 'package:coordn8r/pages/home_page.dart';
 import 'package:coordn8r/pages/pre_login_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'dart:io';
 import 'package:coordn8r/pages/sign_up_page.dart';
 
 // final GoogleSignIn _googleSignIn = new GoogleSignIn();

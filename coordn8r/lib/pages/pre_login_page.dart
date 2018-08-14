@@ -3,8 +3,6 @@ import 'package:coordn8r/pages/login_page.dart';
 import 'package:coordn8r/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
-import 'dart:io';
-import 'package:flutter/services.dart';
 
 final FirebaseAuth auth = FirebaseAuth.instance;
 FirebaseUser user;
@@ -38,7 +36,10 @@ class PreLoginPageState extends State<PreLoginPage>
     );
 
     _iconAnimation = Tween(begin: 0.5, end: 1.0).animate(_easeOutAnimation)
-      ..addListener(() => this.setState(() {}));
+      ..addListener(() => this.setState(() {}))
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) print(status);
+      });
 
     _iconAnimationController.forward();
     Timer(

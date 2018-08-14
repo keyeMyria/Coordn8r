@@ -2,11 +2,9 @@ import 'package:coordn8r/pages/login_page.dart';
 import 'package:coordn8r/pages/sign_up_page.dart';
 import 'package:coordn8r/pages/teams_page.dart';
 import 'package:coordn8r/pages/pre_login_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:community_material_icon/community_material_icon.dart';
-import 'dart:async';
 import 'dart:io';
 
 class HomePage extends StatefulWidget {
@@ -19,7 +17,6 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   final PageStorageKey _teamsPageKey = PageStorageKey('teamsPage');
-  final PageStorageBucket _bucket = PageStorageBucket();
   int _index;
   List<Widget> _pages;
 
@@ -28,23 +25,23 @@ class HomePageState extends State<HomePage> {
     super.initState();
     _index = 0;
     _pages = [
-      new TeamsPage(
+      TeamsPage(
         key: _teamsPageKey,
       ),
       Center(
-        child: new Icon(
+        child: Icon(
           Icons.calendar_today,
           color: Colors.blueAccent,
         ),
       ),
       Center(
-        child: new Icon(
+        child: Icon(
           Icons.fiber_new,
           color: Colors.blueAccent,
         ),
       ),
       Center(
-        child: new Icon(
+        child: Icon(
           Icons.account_box,
           color: Colors.blueAccent,
         ),
@@ -54,7 +51,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       drawer: Drawer(
         child: Flex(
@@ -119,7 +116,7 @@ class HomePageState extends State<HomePage> {
                         showDialog(
                           context: context,
                           builder: (context) => Platform.isIOS
-                              ? new CupertinoAlertDialog(
+                              ? CupertinoAlertDialog(
                                   title: Text('Are you sure?'),
                                   content: Text('You will be logged out.'),
                                   actions: <Widget>[
@@ -138,7 +135,7 @@ class HomePageState extends State<HomePage> {
                                     )
                                   ],
                                 )
-                              : new AlertDialog(
+                              : AlertDialog(
                                   title: Text('Are you sure?'),
                                   content: Text('You will be logged out.'),
                                   actions: <Widget>[
@@ -169,16 +166,13 @@ class HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      appBar: new AppBar(
-        title: new Text('COORDN8R'),
+      appBar: AppBar(
+        title: Text('COORDN8R'),
       ),
-      body: new SafeArea(
-        child: PageStorage(
-          child: _pages[_index],
-          bucket: _bucket,
-        ),
+      body: SafeArea(
+        child: _pages[_index],
       ),
-      bottomNavigationBar: new BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
         onTap: (newIndex) => setState(() {
               _index = newIndex;
@@ -188,28 +182,28 @@ class HomePageState extends State<HomePage> {
         items: [
           BottomNavigationBarItem(
             title: Text('New'),
-            icon: new Icon(
+            icon: Icon(
               CommunityMaterialIcons.group,
             ),
             backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
             title: Text('Calendar'),
-            icon: new Icon(
+            icon: Icon(
               Icons.calendar_today,
             ),
             backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
             title: Text('Teams'),
-            icon: new Icon(
+            icon: Icon(
               Icons.fiber_new,
             ),
             backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
             title: Text('Account'),
-            icon: new Icon(
+            icon: Icon(
               Icons.account_box,
             ),
             backgroundColor: Theme.of(context).primaryColor,

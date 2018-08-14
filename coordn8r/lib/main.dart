@@ -1,14 +1,10 @@
-import 'dart:async';
-import 'dart:io';
 import 'package:coordn8r/pages/email_confirmation_page.dart';
 import 'package:coordn8r/pages/forgot_password_page.dart';
 import 'package:coordn8r/pages/login_page.dart';
 import 'package:coordn8r/pages/sign_up_page.dart';
 import 'package:flutter/material.dart';
-import 'package:coordn8r/pages/teams_page.dart';
 import 'package:coordn8r/pages/pre_login_page.dart';
 import 'package:coordn8r/pages/home_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 // TODO: add flutter's simple_permissions to access internet, location, etc.
 
