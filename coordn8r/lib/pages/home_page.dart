@@ -178,60 +178,43 @@ class HomePageState extends State<HomePage> {
           bucket: _bucket,
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).backgroundColor,
-
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 4.0,
-            )
-          ],
-//            border: Border(
-//              top: BorderSide(
-//                color: Colors.black12,
-//              ),
-//            ),
-        ),
-        child: new BottomNavigationBar(
-          currentIndex: _index,
-          onTap: (newIndex) => setState(() {
-                _index = newIndex;
-              }),
-          fixedColor: Theme.of(context).iconTheme.color,
-          type: BottomNavigationBarType.fixed,
-          items: [
-            BottomNavigationBarItem(
-              title: Text('New'),
-              icon: new Icon(
-                CommunityMaterialIcons.group,
-              ),
-              backgroundColor: Theme.of(context).primaryColor,
+      bottomNavigationBar: new BottomNavigationBar(
+        currentIndex: _index,
+        onTap: (newIndex) => setState(() {
+              _index = newIndex;
+            }),
+        fixedColor: Theme.of(context).iconTheme.color,
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            title: Text('New'),
+            icon: new Icon(
+              CommunityMaterialIcons.group,
             ),
-            BottomNavigationBarItem(
-              title: Text('Calendar'),
-              icon: new Icon(
-                Icons.calendar_today,
-              ),
-              backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          BottomNavigationBarItem(
+            title: Text('Calendar'),
+            icon: new Icon(
+              Icons.calendar_today,
             ),
-            BottomNavigationBarItem(
-              title: Text('Teams'),
-              icon: new Icon(
-                Icons.fiber_new,
-              ),
-              backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          BottomNavigationBarItem(
+            title: Text('Teams'),
+            icon: new Icon(
+              Icons.fiber_new,
             ),
-            BottomNavigationBarItem(
-              title: Text('Account'),
-              icon: new Icon(
-                Icons.account_box,
-              ),
-              backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          BottomNavigationBarItem(
+            title: Text('Account'),
+            icon: new Icon(
+              Icons.account_box,
             ),
-          ],
-        ),
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+        ],
       ),
     );
   }

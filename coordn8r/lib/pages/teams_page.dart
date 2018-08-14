@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:coordn8r/my_expansion_tile.dart';
 import 'package:intl/intl.dart';
+import 'dart:collection';
 
 class TeamsPage extends StatefulWidget {
   const TeamsPage({Key key}) : super(key: key);
@@ -14,46 +15,97 @@ class TeamsPage extends StatefulWidget {
   TeamsPageState createState() => TeamsPageState();
 }
 
-class TeamsPageState extends State<TeamsPage> {
-  Widget _streamContent;
-  Widget _objectiveContent;
-  bool _stream;
+class TeamsPageState extends State<TeamsPage>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> _animationSize;
+  Animation<double> _animationPos;
+  final Duration _duration = const Duration(milliseconds: 500);
+
+//  final Duration _duration1 = const Duration(seconds: 1);
+//  final Duration _duration2 = const Duration(seconds: 2);
+
+  double _x = 0.0, _y = 0.0, _h = 0.0, _w = 0.0, _w0 = 0.0;
+
+  List<Widget> _stack;
+  bool _showFullPage;
+
+  Widget _backButton;
   BuildContext
       _teamsPageContext; // Need this for the page storage -- not sure why but it works
 
   @override
   void initState() {
     super.initState();
+    _showFullPage = false;
+
+    // Widgets & Stack
+    // ============================================
+    _backButton = FlatButton.icon(
+      onPressed: () {
+        setState(() {
+//          _showFullPage = false;
+          _controller.reverse();
+          PageStorage.of(_teamsPageContext).writeState(_teamsPageContext, null,
+              identifier: ValueKey('open'));
+        });
+      },
+      color: Colors.white,
+      shape: StadiumBorder(
+          side: BorderSide(
+        color: Colors.black12,
+      )),
+      icon: Icon(Icons.arrow_back),
+      label: Text('Back'),
+    );
+
     _teamsPageContext = context;
     DocumentSnapshot oldObjective = PageStorage
         .of(_teamsPageContext)
         .readState(_teamsPageContext, identifier: ValueKey('open'));
-    _objectiveContent = oldObjective != null
-        ? Stack(
-            children: <Widget>[
-              ObjectiveFullPage(
-                objective: oldObjective,
-              ),
-              FlatButton.icon(
-                  onPressed: () {
-                    setState(() {
-                      _stream = true;
-                      _objectiveContent = null;
-                      PageStorage.of(_teamsPageContext).writeState(
-                          _teamsPageContext, null,
-                          identifier: ValueKey('open'));
-                    });
-                  },
-                  icon: Icon(Icons.arrow_back),
-                  label: Text('Back'))
-            ],
-          )
-        : null;
-    _stream = true;
+
+    _stack = [
+      oldObjective != null
+          ? ObjectiveFullPage(
+              objective: oldObjective,
+            )
+          : null,
+      _backButton
+    ];
+
+    print(_stack);
+
+    // Animation
+    // ================================================
+    _controller = AnimationController(
+      duration: _duration,
+      vsync: this,
+    )
+      ..addListener(() => setState(() {}))
+      ..addStatusListener((status) {
+        print(status);
+        if (status == AnimationStatus.forward)
+          setState(() {
+            _showFullPage = true;
+          });
+        else if (status == AnimationStatus.dismissed)
+          setState(() {
+            _showFullPage = false;
+          });
+      });
+    _animationSize = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
+    _animationPos = Tween<double>(begin: 1.0, end: 0.0).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
   }
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
   }
 
@@ -69,21 +121,40 @@ class TeamsPageState extends State<TeamsPage> {
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData)
-            return Padding(
-              padding: EdgeInsets.all(8.0),
-              child: const Text(
-                'Loading...',
-                textAlign: TextAlign.center,
+            return Container(
+              constraints: BoxConstraints.expand(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: const Text(
+                  'Loading...',
+                  textAlign: TextAlign.center,
+                ),
               ),
             );
-          return _objectiveContent ??
+          return Stack(
+            children: <Widget>[
               ListView.builder(
                 primary: false,
                 itemCount: snapshot.data.documents.length,
                 padding: const EdgeInsets.only(top: 10.0),
                 itemBuilder: (context, index) =>
                     _buildListItem(context, snapshot.data.documents[index]),
-              );
+              ),
+              Positioned(
+                top: _animationPos.value * (_y - 90.0 + 12.0),
+                left: _animationPos.value * (_x + 12.0),
+                height: _animationSize.value * _h,
+                width: _w0 + _animationSize.value * (_w - _w0),
+                child: _showFullPage
+                    ? Stack(
+                        children: _stack,
+                      )
+                    : Container(
+                        color: Colors.white,
+                      ),
+              ),
+            ],
+          );
         },
       ),
     );
@@ -129,35 +200,31 @@ class TeamsPageState extends State<TeamsPage> {
           ))
         : null;
 
-    // final key = Key(objective.documentID);
+    final GlobalKey<TeamsPageState> key = GlobalKey<TeamsPageState>();
     return Card(
-      key: Key(objective.documentID),
+      key: key,
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
       child: GestureDetector(
 //        onTap: () {},
 //        onDoubleTap: () {},
         onLongPress: () {
+          final RenderBox box = key.currentContext?.findRenderObject();
+          double x = box.localToGlobal(Offset.zero).dx;
+          double y = box.localToGlobal(Offset.zero).dy;
+          double w0 = box.size.width;
+          double h = MediaQuery.of(context).size.height;
+          double w = MediaQuery.of(context).size.width;
+
+          print('Position: ${box.localToGlobal(Offset.zero)}');
+          print('Size: ${box.size}');
           setState(() {
-            _objectiveContent = Stack(
-              children: <Widget>[
-                ObjectiveFullPage(
-                  objective: objective,
-                ),
-                FlatButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        _stream = true;
-                        _objectiveContent = null;
-                        PageStorage.of(_teamsPageContext).writeState(
-                            _teamsPageContext, null,
-                            identifier: ValueKey('open'));
-                      });
-                    },
-                    icon: Icon(Icons.arrow_back),
-                    label: Text('Back'))
-              ],
-            );
-            _stream = false;
+            _x = x;
+            _y = y;
+            _h = h;
+            _w = w;
+            _w0 = w0;
+            _stack[0] = ObjectiveFullPage(objective: objective);
+            _controller.forward();
             PageStorage.of(_teamsPageContext).writeState(
                 _teamsPageContext, objective,
                 identifier: ValueKey('open'));
@@ -322,24 +389,29 @@ class ObjectiveFullPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(objective['Title']),
-            SizedBox(
-              height: 20.0,
-            ),
-            Text(objective['Team']),
-            SizedBox(
-              height: 20.0,
-            ),
-            Text(objective['Description']),
-          ],
+    return Container(
+      constraints: BoxConstraints.expand(),
+      decoration: BoxDecoration(
+        color: Colors.white,
+      ),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView(
+            primary: false,
+            shrinkWrap: true,
+            children: <Widget>[
+              Text(objective['Title']),
+              SizedBox(
+                height: 20.0,
+              ),
+              Text(objective['Team']),
+              SizedBox(
+                height: 20.0,
+              ),
+              Text(objective['Description']),
+            ],
+          ),
         ),
       ),
     );
