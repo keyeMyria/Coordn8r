@@ -77,6 +77,8 @@ class SignUpPageState extends State<SignUpPage> {
             'progress, and complete.',
         'Status': 1,
         'Team': 'The Coordn8r Team',
+        'Deadline':
+            DateTime.now().add(Duration(hours: 1)).millisecondsSinceEpoch,
       });
       user = newUser;
 

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ObjectiveSingleView extends StatelessWidget {
   static String tag = '/objective_single_view';
@@ -13,6 +14,15 @@ class ObjectiveSingleView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const List<String> _statusString = [
+      'Not Started',
+      'In Progress',
+      'Finished',
+    ];
+
+    DateTime _deadline =
+        DateTime.fromMillisecondsSinceEpoch(objective['Deadline']);
+
     return Scaffold(
       appBar: new AppBar(
         title: new Text('Objective'),
@@ -22,14 +32,19 @@ class ObjectiveSingleView extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
         ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView(
-              primary: false,
-              shrinkWrap: true,
-              children: <Widget>[
-                Hero(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: ListView(
+            primary: false,
+            shrinkWrap: true,
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                decoration: BoxDecoration(
+                    border: Border(
+                  bottom: BorderSide(color: Theme.of(context).dividerColor),
+                )),
+                child: Hero(
                   tag: 'team' + objective.documentID,
                   child: Text(
                     '${objective['Team']}',
@@ -37,29 +52,59 @@ class ObjectiveSingleView extends StatelessWidget {
                         .of(context)
                         .textTheme
                         .title
-                        .copyWith(fontSize: 16.0),
+                        .copyWith(fontSize: 24.0),
                   ),
                 ),
-                SizedBox(
-                  height: 20.0,
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Hero(
+                tag: 'title' + objective.documentID,
+                child: Text(
+                  '${objective['Title']}',
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .subhead
+                      .copyWith(fontSize: 20.0),
                 ),
-                Hero(
-                  tag: 'title' + objective.documentID,
-                  child: Text(
-                    '${objective['Title']}',
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .subhead
-                        .copyWith(fontSize: 14.0),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '${DateFormat('h:mm a').format(
+                      _deadline).toLowerCase()} ${_deadline.timeZoneName}\n${DateFormat(
+                      'M/d/yy').format(_deadline)}',
+                    style: TextStyle(
+                      color: DateTime.now().isBefore(_deadline)
+                          ? Theme.of(context).textTheme.body1.color
+                          : Colors.red,
+                      fontWeight: DateTime.now().isBefore(_deadline)
+                          ? FontWeight.normal
+                          : FontWeight.bold,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Text(objective['Description']),
-              ],
-            ),
+                  Text(
+                    '${_statusString[objective['Status'].clamp(
+                        0, 2)]}',
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Text(
+                objective['Description'],
+                textAlign: TextAlign.justify,
+              ),
+            ],
           ),
         ),
       ),

@@ -54,6 +54,7 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   void _login() async {
     setState(() {
       _loginInProgress = true;
+      _errorText = null;
     });
     await auth
         .signInWithEmailAndPassword(email: _email, password: _password)
@@ -85,7 +86,7 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     }).catchError((e) => setState(() {
               print('ERROR: ' + e.toString());
               _loginInProgress = false;
-              _errorText = 'Error experienced with server';
+              _errorText = 'Invalid email and password combination';
             }));
 
 //    assert(user != null);

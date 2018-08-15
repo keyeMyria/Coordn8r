@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:coordn8r/pages/objective_single_view.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,9 +16,16 @@ class TeamsPage extends StatefulWidget {
 }
 
 class TeamsPageState extends State<TeamsPage> {
+  Timer _timer;
+
   @override
   void initState() {
     super.initState();
+    _timer = Timer.periodic(
+        const Duration(minutes: 1),
+        (_) => setState(() {
+              print('Timer');
+            }));
   }
 
   @override
@@ -174,6 +183,7 @@ class ObjectiveState extends State<Objective> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         Expanded(
           child: Icon(
@@ -189,47 +199,55 @@ class ObjectiveState extends State<Objective> {
         Expanded(
           flex: 4,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Row(
                 mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Expanded(
                     flex: 5,
-                    child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Hero(
-                        tag: 'team' + widget.objective.documentID,
-                        child: Text(
-                          '${widget.objective['Team']}',
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .title
-                              .copyWith(fontSize: 16.0),
-                        ),
+                    child: Hero(
+                      tag: 'team' + widget.objective.documentID,
+                      child: Text(
+                        '${widget.objective['Team']}',
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .title
+                            .copyWith(fontSize: 16.0),
                       ),
                     ),
                   ),
                   Expanded(
                     flex: 2,
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: Text(
-                        DateFormat('h:mm a')
-                                .format(DateTime.now())
-                                .toLowerCase() +
-                            '\n' +
-                            DateFormat('M/d/yy').format(DateTime.now()),
-                        textAlign: TextAlign.end,
-                        maxLines: 2,
-                        overflow: TextOverflow.fade,
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .subhead
-                            .copyWith(fontSize: 12.0),
-                      ),
+                    child: Text(
+                      DateFormat('h:mm a ')
+                              .format(DateTime.fromMillisecondsSinceEpoch(
+                                  widget.objective['Deadline']))
+                              .toLowerCase() +
+                          '\n' +
+                          DateFormat('M/d/yy').format(
+                            DateTime.fromMillisecondsSinceEpoch(
+                                widget.objective['Deadline']),
+                          ),
+                      textAlign: TextAlign.end,
+                      maxLines: 2,
+                      style: DateTime.now().isBefore(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    widget.objective['Deadline']),
+                              )
+                          ? Theme
+                              .of(context)
+                              .textTheme
+                              .subhead
+                              .copyWith(fontSize: 12.0)
+                          : Theme.of(context).textTheme.subhead.copyWith(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12.0,
+                              ),
                     ),
                   ),
                 ],
