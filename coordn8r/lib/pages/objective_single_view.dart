@@ -81,7 +81,7 @@ class ObjectiveSingleView extends StatelessWidget {
                   Text(
                     '${DateFormat('h:mm a').format(
                       _deadline).toLowerCase()} ${_deadline.timeZoneName}\n${DateFormat(
-                      'M/d/yy').format(_deadline)}',
+                      'M/d/yyyy').format(_deadline)}',
                     style: TextStyle(
                       color: DateTime.now().isBefore(_deadline)
                           ? Theme.of(context).textTheme.body1.color

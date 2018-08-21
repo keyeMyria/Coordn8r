@@ -15,10 +15,10 @@ dependencies:
   cloud_firestore: ^0.7.2
 
   # Firebase authentication
-  firebase_auth: ^0.5.11
+  firebase_auth: ^0.5.19
 
   # Google sign in capabilities
-  google_sign_in: ^3.0.4
+  google_sign_in: ^3.0.5
 
   # Used for date and time formatting
   intl: ^0.15.7

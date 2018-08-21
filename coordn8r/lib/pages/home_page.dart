@@ -1,5 +1,6 @@
 import 'package:coordn8r/pages/login_page.dart';
 import 'package:coordn8r/pages/sign_up_page.dart';
+import 'package:coordn8r/pages/objectives_page.dart';
 import 'package:coordn8r/pages/teams_page.dart';
 import 'package:coordn8r/pages/pre_login_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,7 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  final PageStorageKey _teamsPageKey = PageStorageKey('teamsPage');
+  final PageStorageKey _objectivesPageKey = PageStorageKey('teamsPage');
   int _index;
   List<Widget> _pages;
 
@@ -25,8 +26,8 @@ class HomePageState extends State<HomePage> {
     super.initState();
     _index = 0;
     _pages = [
-      TeamsPage(
-        key: _teamsPageKey,
+      ObjectivesPage(
+        key: _objectivesPageKey,
       ),
       Center(
         child: Icon(
@@ -183,7 +184,7 @@ class HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             title: Text('New'),
             icon: Icon(
-              CommunityMaterialIcons.group,
+              Icons.fiber_new,
             ),
             backgroundColor: Theme.of(context).primaryColor,
           ),
@@ -197,7 +198,7 @@ class HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             title: Text('Teams'),
             icon: Icon(
-              Icons.fiber_new,
+              CommunityMaterialIcons.google_circles_group,
             ),
             backgroundColor: Theme.of(context).primaryColor,
           ),

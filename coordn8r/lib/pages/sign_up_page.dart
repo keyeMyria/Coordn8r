@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:coordn8r/pages/home_page.dart';
 import 'package:coordn8r/pages/pre_login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -177,11 +178,12 @@ class SignUpPageState extends State<SignUpPage> {
                         labelText: "Password",
                         errorText: _errorTextPassword,
                         suffixIcon: InkWell(
+                          borderRadius: BorderRadius.circular(100.0),
                           child: Icon(
-                            Icons.remove_red_eye,
-                            color: _obscureText1
-                                ? Colors.grey
-                                : Theme.of(context).primaryColor,
+                            _obscureText1
+                                ? CommunityMaterialIcons.eye_off
+                                : CommunityMaterialIcons.eye,
+                            color: Colors.grey,
                           ),
                           onTap: () {
                             setState(() {
@@ -203,11 +205,12 @@ class SignUpPageState extends State<SignUpPage> {
                         labelText: "Confirm Password",
                         errorText: _errorTextPassword,
                         suffixIcon: InkWell(
+                          borderRadius: BorderRadius.circular(100.0),
                           child: Icon(
-                            Icons.remove_red_eye,
-                            color: _obscureText2
-                                ? Colors.grey
-                                : Theme.of(context).primaryColor,
+                            _obscureText2
+                                ? CommunityMaterialIcons.eye_off
+                                : CommunityMaterialIcons.eye,
+                            color: Colors.grey,
                           ),
                           onTap: () {
                             setState(() {

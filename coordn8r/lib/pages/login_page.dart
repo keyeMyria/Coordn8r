@@ -17,7 +17,6 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   AnimationController _iconAnimationController;
-  Animation<double> _iconAnimation;
   final GlobalKey<FormState> _loginFormKey = new GlobalKey<FormState>();
   String _email;
   String _password;
@@ -32,9 +31,6 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: 500),
     );
-    _iconAnimation = Tween(begin: 0.0, end: 100.0)
-        .animate(_iconAnimationController)
-          ..addListener(() => this.setState(() {}));
     _iconAnimationController.forward();
   }
 
@@ -96,7 +92,6 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   }
 
   void _logout() async {
-    // TODO: delete underscore to make public method
     await auth.signOut().catchError((e) => print(e
         .message)); // TODO: define what happens when the logout is unsuccessful
   }
@@ -121,7 +116,7 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 ),
                 onTap: () {
                   _email = "quintonhoffman22@gmail.com";
-                  _password = "TestPassword";
+                  _password = "111111";
                   _login();
                 }),
             Form(
