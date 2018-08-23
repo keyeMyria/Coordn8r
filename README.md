@@ -1,6 +1,6 @@
 # Coordn8r
 
-Application to facilitate all aspects of teamwork, collaboration, and coordination.
+Mobile application created with Flutter to facilitate all aspects of teamwork, collaboration, and coordination.
 
 ### Currently Under Development
 - Fully functional Sign Up, Log in, and Forgot Password backed with Firebase Authentication.
