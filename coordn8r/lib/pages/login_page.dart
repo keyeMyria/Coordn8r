@@ -22,6 +22,11 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   String _password;
   String _errorText;
   bool _loginInProgress = false; // TODO: Move to a stream
+  final double _percentHeightSpacing = 0.05;
+  final double _percentWidthSpacing = 0.1;
+  final double _loginButtonHeight = 50.0;
+  final double _loginButtonMinWidth = 100.0;
+  final double _loginButtonWidthPercent = 0.5;
 
   @override
   void initState() {
@@ -98,6 +103,9 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Center(
         child: ListView(
@@ -122,7 +130,7 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             Form(
               key: _loginFormKey,
               child: Container(
-                padding: EdgeInsets.all(40.0),
+                padding: EdgeInsets.all(screenWidth * _percentWidthSpacing),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -150,13 +158,17 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       onSaved: (val) => _password = val,
                     ),
                     SizedBox(
-                      height: 30.0,
+                      height: screenHeight * _percentHeightSpacing,
                     ),
                     Material(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius:
+                          BorderRadius.circular(_loginButtonHeight / 2),
                       child: MaterialButton(
-                        minWidth: 200.0,
-                        height: 50.0,
+                        minWidth: screenWidth * _loginButtonWidthPercent <
+                                _loginButtonMinWidth
+                            ? _loginButtonMinWidth
+                            : screenWidth * _loginButtonWidthPercent,
+                        height: _loginButtonHeight,
                         onPressed: _loginInProgress ? null : _testSignIn,
                         color: Theme.of(context).buttonColor,
                         child: _loginInProgress
@@ -171,19 +183,16 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       ),
                     ),
                     SizedBox(
-                      height: 30.0,
+                      height: screenHeight * _percentHeightSpacing,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         FlatButton(
                           splashColor: Colors.grey,
                           child: Text("Sign up"),
                           onPressed: () =>
                               Navigator.of(context).pushNamed(SignUpPage.tag),
-                        ),
-                        SizedBox(
-                          width: 20.0,
                         ),
                         FlatButton(
                           splashColor: Colors.grey,
