@@ -26,7 +26,6 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   final double _percentWidthSpacing = 0.1;
   final double _loginButtonHeight = 50.0;
   final double _loginButtonMinWidth = 100.0;
-  final double _loginButtonWidthPercent = 0.5;
 
   @override
   void initState() {
@@ -106,108 +105,110 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
+    Widget boxSpacing = SizedBox(height: screenHeight * _percentHeightSpacing);
+
     return Scaffold(
       body: Center(
-        child: ListView(
-          primary: false,
-          shrinkWrap: true, // this plus "Center" centers everything
-          children: <Widget>[
-            InkWell(
-                child: Hero(
-                  tag: 'logo',
-                  child: Image(
-                    fit: BoxFit.contain,
-                    image: AssetImage("assets/logo/logo96.png"),
-                    height: 96.0,
-                    width: 96.0,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: screenWidth * _percentWidthSpacing),
+          child: Form(
+            key: _loginFormKey,
+            child: ListView(
+              primary: false,
+              shrinkWrap: true, // this plus "Center" centers everything
+              children: <Widget>[
+                InkWell(
+                    // TODO: REMOVE LATER
+                    child: Hero(
+                      tag: 'logo',
+                      child: Image(
+                        fit: BoxFit.contain,
+                        image: AssetImage("assets/logo/logo96.png"),
+                        height: 96.0,
+                        width: 96.0,
+                      ),
+                    ),
+                    onTap: () {
+                      _email = "quintonhoffman22@gmail.com";
+                      _password = "111111";
+                      _login();
+                    }),
+                boxSpacing,
+                TextFormField(
+                  decoration: InputDecoration(
+                      labelText: "Email", hintText: "jane.doe@example.com"),
+                  keyboardType: TextInputType.emailAddress,
+                  autofocus: false,
+                  validator: (value) => value.isEmpty || !value.contains('@')
+                      ? 'Please enter valid email'
+                      : null,
+                  onSaved: (val) => _email = val,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: "Password",
+                    errorText: _errorText,
+                  ),
+                  keyboardType: TextInputType.text,
+                  obscureText: true,
+                  autofocus: false,
+                  validator: (value) =>
+                      value.isEmpty ? 'Please enter valid password' : null,
+                  onSaved: (val) => _password = val,
+                ),
+                boxSpacing,
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      // basically a lot of code to make sure the min width is 100
+                      horizontal: screenWidth * (1 - 2 * _percentWidthSpacing) -
+                                  (screenWidth * 2 * 0.15) <
+                              _loginButtonMinWidth
+                          ? (-_loginButtonMinWidth +
+                                  screenWidth *
+                                      (1 - 2 * _percentWidthSpacing)) /
+                              2
+                          : screenWidth * 0.15),
+                  child: Material(
+                    borderRadius: BorderRadius.circular(_loginButtonHeight / 2),
+                    child: MaterialButton(
+                      height: _loginButtonHeight,
+                      onPressed: _loginInProgress ? null : _testSignIn,
+                      color: Theme.of(context).buttonColor,
+                      child: _loginInProgress
+                          ? CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Theme.of(context).textTheme.button.color),
+                            )
+                          : Text(
+                              "Log In",
+                              style: Theme.of(context).textTheme.button,
+                            ),
+                    ),
                   ),
                 ),
-                onTap: () {
-                  _email = "quintonhoffman22@gmail.com";
-                  _password = "111111";
-                  _login();
-                }),
-            Form(
-              key: _loginFormKey,
-              child: Container(
-                padding: EdgeInsets.all(screenWidth * _percentWidthSpacing),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                boxSpacing,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    TextFormField(
-                      decoration: InputDecoration(
-                          labelText: "Email", hintText: "jane.doe@example.com"),
-                      keyboardType: TextInputType.emailAddress,
-                      autofocus: false,
-                      validator: (value) =>
-                          value.isEmpty || !value.contains('@')
-                              ? 'Please enter valid email'
-                              : null,
-                      onSaved: (val) => _email = val,
+                    FlatButton(
+                      splashColor: Colors.grey,
+                      child: Text("Sign up"),
+                      onPressed: () =>
+                          Navigator.of(context).pushNamed(SignUpPage.tag),
                     ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Password",
-                        errorText: _errorText,
-                      ),
-                      keyboardType: TextInputType.text,
-                      obscureText: true,
-                      autofocus: false,
-                      validator: (value) =>
-                          value.isEmpty ? 'Please enter valid password' : null,
-                      onSaved: (val) => _password = val,
-                    ),
-                    SizedBox(
-                      height: screenHeight * _percentHeightSpacing,
-                    ),
-                    Material(
-                      borderRadius:
-                          BorderRadius.circular(_loginButtonHeight / 2),
-                      child: MaterialButton(
-                        minWidth: screenWidth * _loginButtonWidthPercent <
-                                _loginButtonMinWidth
-                            ? _loginButtonMinWidth
-                            : screenWidth * _loginButtonWidthPercent,
-                        height: _loginButtonHeight,
-                        onPressed: _loginInProgress ? null : _testSignIn,
-                        color: Theme.of(context).buttonColor,
-                        child: _loginInProgress
-                            ? CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    Theme.of(context).textTheme.button.color),
-                              )
-                            : Text(
-                                "Log In",
-                                style: Theme.of(context).textTheme.button,
-                              ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: screenHeight * _percentHeightSpacing,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        FlatButton(
-                          splashColor: Colors.grey,
-                          child: Text("Sign up"),
-                          onPressed: () =>
-                              Navigator.of(context).pushNamed(SignUpPage.tag),
-                        ),
-                        FlatButton(
-                          splashColor: Colors.grey,
-                          onPressed: () => Navigator
-                              .of(context)
-                              .pushNamed(ForgotPasswordPage.tag),
-                          child: Text("Forgot Password"),
-                        ),
-                      ],
+                    FlatButton(
+                      splashColor: Colors.grey,
+                      onPressed: () => Navigator
+                          .of(context)
+                          .pushNamed(ForgotPasswordPage.tag),
+                      child: Text("Forgot Password"),
                     ),
                   ],
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
